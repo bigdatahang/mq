@@ -10,7 +10,7 @@ public class GlobalPropertiesLoader {
 
     public void loadProperties() {
         globalProperties = new GlobalProperties();
-        String mqHome = System.getProperty(MQ_HOME);
+        String mqHome = System.getenv(MQ_HOME);
         if (StringUtil.isNullOrEmpty(mqHome)) {
             throw new IllegalArgumentException("MQ_HOME IS NULL");
         }
