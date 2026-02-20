@@ -11,9 +11,22 @@ import java.nio.channels.FileChannel;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
+/**
+ * 内存映射文件模型
+ * 提供基于MMap（内存映射文件）的文件读写操作
+ * 通过将文件映射到内存，实现高效的文件IO操作
+ * 
+ * 注意：JDK8存在bug，使用FileChannel.map映射后文件无法删除
+ * 本类参考RocketMQ实现，通过反射调用Cleaner释放内存映射
+ *
+ * @author yihang07
+ */
 public class MMapFileModel {
+    /** 文件对象 */
     private File file;
+    /** 内存映射缓冲区 */
     private MappedByteBuffer mappedByteBuffer;
+    /** 文件通道 */
     private FileChannel fileChannel;
 
     /**

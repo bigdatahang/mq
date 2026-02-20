@@ -8,9 +8,20 @@ import io.netty.util.internal.StringUtil;
 
 import java.util.List;
 
+/**
+ * MQ主题配置加载器
+ * 从配置文件中加载Topic相关的配置信息
+ * 
+ * @author yihang07
+ */
 public class MQTopicLoader {
+    /** MQ主题模型列表 */
     private List<MQTopicModel> mqTopicModelList;
 
+    /**
+     * 加载Topic配置
+     * 从mq-topic.json文件中读取并解析所有Topic的配置信息
+     */
     public void loadProperties() {
         GlobalProperties globalProperties = CommonCache.getGlobalProperties();
         String mqHome = globalProperties.getMqHome();
