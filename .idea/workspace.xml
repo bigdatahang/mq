@@ -5,11 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46c3923b-c68f-4f66-b38e-c0453291e829" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/model/MQTopicModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/model/QueueModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/FileContentReaderUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/broker/ config/mq-topic.json" beforeDir="false" afterPath="$PROJECT_DIR$/broker/ config/mq-topic.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/broker/store/order_cancel_topic/00000001" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/BrokerStartUp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/broker/ config/mq-topic.json" beforeDir="false" afterPath="$PROJECT_DIR$/broker/config/mq-topic.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/broker/store/order_cancel_topic/00000000" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/cache/CommonCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/cache/CommonCache.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/GlobalPropertiesLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/GlobalPropertiesLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/TopicInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/TopicInfoLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/MQTopicLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/MessageAppenderHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/MessageAppenderHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/FileContentReaderUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/FileContentReaderUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/MMapUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/MMapUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,6 +32,10 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$USER_HOME$/Library/Java/JavaVirtualMachines/corretto-1.8.0_472/Contents/Home/src.zip!/java/io/File.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$USER_HOME$/Library/Java/JavaVirtualMachines/corretto-1.8.0_472/Contents/Home/src.zip!/java/io/RandomAccessFile.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
@@ -48,18 +59,20 @@
     "project.structure.last.edited": "项目",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
+    "应用程序.BrokerStartUp.executor": "Run",
     "应用程序.FileContentReaderUtil.executor": "Run",
     "应用程序.MMapUtil.executor": "Run",
     "应用程序.MessageAppenderHandler.executor": "Run"
   }
 }]]></component>
-  <component name="RunManager" selected="应用程序.FileContentReaderUtil">
-    <configuration name="FileContentReaderUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.util.FileContentReaderUtil" />
+  <component name="RunManager" selected="应用程序.BrokerStartUp">
+    <configuration name="BrokerStartUp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.BrokerStartUp" />
       <module name="mqbroker" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.k.mq.broker.util.*" />
+          <option name="PATTERN" value="com.k.mq.broker.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -67,8 +80,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MMapUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.util.MMapUtil" />
+    <configuration name="FileContentReaderUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.util.FileContentReaderUtil" />
       <module name="mqbroker" />
       <extension name="coverage">
         <pattern>
@@ -127,11 +140,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="应用程序.BrokerStartUp" />
         <item itemvalue="应用程序.FileContentReaderUtil" />
         <item itemvalue="应用程序.MessageAppenderHandler" />
         <item itemvalue="JUnit.MMapUtilTest.testReadAndWrite" />
         <item itemvalue="JUnit.MMapUtilTest.testLoadFileInMMap" />
-        <item itemvalue="应用程序.MMapUtil" />
       </list>
     </recent_temporary>
   </component>

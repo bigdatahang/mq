@@ -21,7 +21,7 @@ public class FileContentReaderUtil {
     }
 
     public static void main(String[] args) {
-        String json = readFromFile("/Users/yihang07/code/mq/broker/ config/mq-topic.json");
+        String json = readFromFile("/Users/yihang07/code/mq/broker/config/mq-topic.json");
         List<MQTopicModel> mqTopicModels = JSON.parseArray(json, MQTopicModel.class);
         System.out.println(mqTopicModels);
     }
