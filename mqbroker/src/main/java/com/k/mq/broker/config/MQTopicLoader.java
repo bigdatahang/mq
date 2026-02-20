@@ -37,6 +37,9 @@ public class MQTopicLoader {
         CommonCache.setMqTopicModelList(mqTopicModelList);
     }
 
+    /**
+     * 开启定时任务刷写JSON文件
+     */
     public void startRefreshMQTopicTask() {
         CommonThreadPoolConfig.refreshThreadExecutor.scheduleAtFixedRate(
                 new Runnable() {

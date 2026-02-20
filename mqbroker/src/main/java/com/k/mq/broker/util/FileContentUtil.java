@@ -31,6 +31,14 @@ public class FileContentUtil {
         }
     }
 
+    /**
+     * 覆盖写入内容到文件
+     * 如果文件已存在，将清空原有内容后写入新内容
+     * 
+     * @param path 文件路径
+     * @param content 要写入的内容
+     * @throws RuntimeException 当文件写入失败时抛出
+     */
     public static void overwriteToFile(String path, String content) {
         try (FileWriter fileWriter = new FileWriter(path)) {
             fileWriter.write(content);

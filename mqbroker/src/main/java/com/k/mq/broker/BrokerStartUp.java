@@ -71,6 +71,5 @@ public class BrokerStartUp {
             commitLogAppenderHandler.appendMessage(topic, content.getBytes());
             TimeUnit.MICROSECONDS.sleep(1);
         }
-        commitLogAppenderHandler.readContent(topic);
     }
 }

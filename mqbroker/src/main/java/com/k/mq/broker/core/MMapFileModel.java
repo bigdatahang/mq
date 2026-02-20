@@ -46,8 +46,16 @@ public class MMapFileModel {
      */
     private FileChannel fileChannel;
 
+    /** 
+     * 主题名称
+     * 用于标识当前MMapFileModel所属的Topic
+     */
     private String topic;
 
+    /** 
+     * 写入消息时使用的锁
+     * 保证并发写入的线程安全性
+     */
     private PutMessageLock lock = new UnfairReentrantLock();
 
     /**
@@ -65,6 +73,16 @@ public class MMapFileModel {
         this.doMMap(filePath, startOffset, mappedSize);
     }
 
+    /**
+     * 执行内存映射操作
+     * 将指定文件映射到内存中
+     * 
+     * @param filePath 文件路径
+     * @param startOffset 映射起始偏移量
+     * @param mappedSize 映射大小（字节数）
+     * @throws IOException 当文件操作失败时抛出
+     * @throws FileNotFoundException 当文件不存在时抛出
+     */
     private void doMMap(String filePath, int startOffset, int mappedSize) throws IOException {
         file = new File(filePath);
         if (!file.exists()) {
@@ -111,27 +129,61 @@ public class MMapFileModel {
         return filePath;
     }
 
+    /**
+     * CommitLog文件路径封装类
+     * 用于同时返回文件名和完整路径
+     * 
+     * @author yihang07
+     */
     class CommitLogFilePath {
+        /** 文件名（如"00000001"） */
         private String fileName;
+        /** 文件完整路径 */
         private String filePath;
 
+        /**
+         * 构造函数
+         * 
+         * @param fileName 文件名
+         * @param filePath 文件完整路径
+         */
         public CommitLogFilePath(String fileName, String filePath) {
             this.fileName = fileName;
             this.filePath = filePath;
         }
 
+        /**
+         * 获取文件名
+         * 
+         * @return 文件名
+         */
         public String getFileName() {
             return fileName;
         }
 
+        /**
+         * 设置文件名
+         * 
+         * @param fileName 文件名
+         */
         public void setFileName(String fileName) {
             this.fileName = fileName;
         }
 
+        /**
+         * 获取文件完整路径
+         * 
+         * @return 文件完整路径
+         */
         public String getFilePath() {
             return filePath;
         }
 
+        /**
+         * 设置文件完整路径
+         * 
+         * @param filePath 文件完整路径
+         */
         public void setFilePath(String filePath) {
             this.filePath = filePath;
         }
@@ -239,6 +291,14 @@ public class MMapFileModel {
         }
     }
 
+    /**
+     * 检查CommitLog是否有足够的可用空间
+     * 如果空间不足，自动创建新的CommitLog文件并重新映射
+     * 
+     * @param messageSize 要写入的消息大小（字节数）
+     * @param commitLogModel CommitLog配置模型
+     * @throws IOException 当创建新文件或映射失败时抛出
+     */
     private void checkCommitLogHasEnableSpace(int messageSize, CommitLogModel commitLogModel) throws IOException {
         MQTopicModel mqTopicModel = CommonCache.getMqTopicModelMap().get(topic);
         
