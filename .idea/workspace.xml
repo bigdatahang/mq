@@ -5,18 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46c3923b-c68f-4f66-b38e-c0453291e829" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/broker/store/order_cancel_topic/00000001" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/BrokerStartUp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/broker/store/order_cancel_topic/00000000" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/model/CommitLogModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/CommitLogFileNameUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/broker/ config/mq-topic.json" beforeDir="false" afterPath="$PROJECT_DIR$/broker/config/mq-topic.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/broker/store/order_cancel_topic/00000000" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/broker/config/mq-topic.json" beforeDir="false" afterPath="$PROJECT_DIR$/broker/config/mq-topic.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/broker/store/order_cancel_topic/00000001" beforeDir="false" afterPath="$PROJECT_DIR$/broker/store/order_cancel_topic/00000001" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/BrokerStartUp.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/BrokerStartUp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/cache/CommonCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/cache/CommonCache.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/GlobalPropertiesLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/GlobalPropertiesLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/TopicInfo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/TopicInfoLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/MQTopicLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/MessageAppenderHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/MessageAppenderHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/MQTopicLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/MQTopicLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/CommitLogAppenderHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/CommitLogAppenderHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/model/MQTopicModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/model/MQTopicModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/FileContentReaderUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/FileContentReaderUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/MMapUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/MMapUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,23 +57,56 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/yihang07/code/mq/broker/store/order_cancel_topic",
     "project.structure.last.edited": "项目",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
     "settings.editor.selected.configurable": "editor.preferences.fonts.default",
     "应用程序.BrokerStartUp.executor": "Run",
+    "应用程序.CommitLogFileNameUtil.executor": "Run",
     "应用程序.FileContentReaderUtil.executor": "Run",
     "应用程序.MMapUtil.executor": "Run",
     "应用程序.MessageAppenderHandler.executor": "Run"
   }
 }]]></component>
-  <component name="RunManager" selected="应用程序.BrokerStartUp">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/broker/store/order_cancel_topic" />
+    </key>
+  </component>
+  <component name="RunManager" selected="应用程序.CommitLogFileNameUtil">
     <configuration name="BrokerStartUp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.BrokerStartUp" />
       <module name="mqbroker" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.k.mq.broker.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CommitLogAppenderHandler" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.core.CommitLogAppenderHandler" />
+      <module name="mqbroker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.k.mq.broker.core.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CommitLogFileNameUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.util.CommitLogFileNameUtil" />
+      <module name="mqbroker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.k.mq.broker.util.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -89,35 +123,6 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MessageAppenderHandler" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.core.MessageAppenderHandler" />
-      <module name="mqbroker" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.k.mq.broker.core.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MMapUtilTest.testLoadFileInMMap" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="mqbroker" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.k.mq.broker.test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.k.mq.broker.test" />
-      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.test.MMapUtilTest" />
-      <option name="METHOD_NAME" value="testLoadFileInMMap" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -140,11 +145,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="应用程序.BrokerStartUp" />
+        <item itemvalue="应用程序.CommitLogFileNameUtil" />
         <item itemvalue="应用程序.FileContentReaderUtil" />
-        <item itemvalue="应用程序.MessageAppenderHandler" />
+        <item itemvalue="应用程序.BrokerStartUp" />
+        <item itemvalue="应用程序.CommitLogAppenderHandler" />
         <item itemvalue="JUnit.MMapUtilTest.testReadAndWrite" />
-        <item itemvalue="JUnit.MMapUtilTest.testLoadFileInMMap" />
       </list>
     </recent_temporary>
   </component>

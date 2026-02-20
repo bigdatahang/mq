@@ -23,7 +23,7 @@ public class FileContentReaderUtil {
      */
     public static String readFromFile(String path) {
         try (BufferedReader in = new BufferedReader(new FileReader(path))) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             while (in.ready()) {
                 sb.append(in.readLine());
             }

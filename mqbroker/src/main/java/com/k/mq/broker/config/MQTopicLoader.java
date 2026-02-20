@@ -7,16 +7,16 @@ import com.k.mq.broker.util.FileContentReaderUtil;
 import io.netty.util.internal.StringUtil;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * MQ主题配置加载器
  * 从配置文件中加载Topic相关的配置信息
- * 
+ *
  * @author yihang07
  */
 public class MQTopicLoader {
-    /** MQ主题模型列表 */
-    private List<MQTopicModel> mqTopicModelList;
 
     /**
      * 加载Topic配置
@@ -29,7 +29,8 @@ public class MQTopicLoader {
             throw new IllegalArgumentException("MQ_HOME IS NULL");
         }
         String jsonFilePath = mqHome + "/broker/config/mq-topic.json";
-        mqTopicModelList = JSON.parseArray(FileContentReaderUtil.readFromFile(jsonFilePath), MQTopicModel.class);
-        CommonCache.setMqTopicModelList(mqTopicModelList);
+        List<MQTopicModel> mqTopicModelList = JSON.parseArray(FileContentReaderUtil.readFromFile(jsonFilePath), MQTopicModel.class);
+        Map<String, MQTopicModel> mqTopicModelMap = mqTopicModelList.stream().collect(Collectors.toMap(MQTopicModel::getTopic, item -> item));
+        CommonCache.setMqTopicModelMap(mqTopicModelMap);
     }
 }

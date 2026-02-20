@@ -10,15 +10,13 @@ import io.netty.util.internal.StringUtil;
  * @author yihang07
  */
 public class GlobalPropertiesLoader {
-    /** 全局配置对象 */
-    private GlobalProperties globalProperties;
 
     /**
      * 加载全局配置
      * 从环境变量或默认配置中加载MQ_HOME等全局配置信息
      */
     public void loadProperties() {
-        globalProperties = new GlobalProperties();
+        GlobalProperties globalProperties = new GlobalProperties();
         // String mqHome = System.getenv(MQ_HOME);
         String mqHome = "/Users/yihang07/code/mq";
         if (StringUtil.isNullOrEmpty(mqHome)) {

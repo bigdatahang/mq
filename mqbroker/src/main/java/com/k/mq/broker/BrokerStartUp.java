@@ -7,57 +7,55 @@ import com.k.mq.broker.core.CommitLogAppenderHandler;
 import com.k.mq.broker.model.MQTopicModel;
 
 import java.io.IOException;
-import java.util.List;
-
-import static com.k.mq.broker.constants.BrokerConstants.BASE_STORE_PATH;
 
 /**
  * Broker启动类
  * 负责初始化Broker所需的各种配置和处理器
- * 
+ *
  * @author yihang07
  */
 public class BrokerStartUp {
-    /** MQ主题配置加载器 */
+    /**
+     * MQ主题配置加载器
+     */
     public static MQTopicLoader mqTopicLoader;
-    /** 全局配置加载器 */
+    /**
+     * 全局配置加载器
+     */
     public static GlobalPropertiesLoader globalPropertiesLoader;
-    /** CommitLog消息追加处理器 */
+    /**
+     * CommitLog消息追加处理器
+     */
     public static CommitLogAppenderHandler commitLogAppenderHandler;
 
     /**
      * 初始化Broker的各项配置和资源
      * 包括全局配置、Topic配置、以及CommitLog文件的内存映射加载
-     * 
+     *
      * @throws IOException 当文件操作失败时抛出
      */
     public static void initProperties() throws IOException {
         // 加载全局配置
         globalPropertiesLoader = new GlobalPropertiesLoader();
         globalPropertiesLoader.loadProperties();
-        
+
         // 加载Topic配置
         mqTopicLoader = new MQTopicLoader();
         mqTopicLoader.loadProperties();
-        
+
         // 初始化CommitLog处理器
         commitLogAppenderHandler = new CommitLogAppenderHandler();
-        
+
         // 为每个Topic准备CommitLog文件的内存映射
-        List<MQTopicModel> mqTopicModelList = CommonCache.getMqTopicModelList();
-        for (MQTopicModel mqTopicModel : mqTopicModelList) {
+        for (MQTopicModel mqTopicModel : CommonCache.getMqTopicModelMap().values()) {
             String topic = mqTopicModel.getTopic();
-            String filePath = CommonCache.getGlobalProperties().getMqHome()
-                    + BASE_STORE_PATH
-                    + topic
-                    + "/00000001";
-            commitLogAppenderHandler.prepareMMapLoading(filePath, topic);
+            commitLogAppenderHandler.prepareMMapLoading(topic);
         }
     }
 
     /**
      * Broker启动入口
-     * 
+     *
      * @param args 命令行参数
      * @throws IOException 当初始化失败时抛出
      */
