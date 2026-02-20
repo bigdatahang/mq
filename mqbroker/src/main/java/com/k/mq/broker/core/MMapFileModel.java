@@ -88,7 +88,7 @@ public class MMapFileModel {
 
         // 获取CommitLog配置信息
         CommitLogModel commitLogModel = mqTopicModel.getCommitLogModel();
-        long diff = commitLogModel.getOffsetLimit() - commitLogModel.getOffset();
+        long diff = commitLogModel.diff();
 
         String filePath;
         if (diff == 0) {
@@ -181,8 +181,17 @@ public class MMapFileModel {
      * @param force                 是否强制刷盘到磁盘
      */
     public void writeContent(CommitLogMessageModel commitLogMessageModel, boolean force) throws IOException {
+        MQTopicModel mqTopicModel = CommonCache.getMqTopicModelMap().get(topic);
+        if (mqTopicModel == null) {
+            throw new IllegalArgumentException("MQTopicModel is null");
+        }
+        CommitLogModel commitLogModel = mqTopicModel.getCommitLogModel();
+        if (commitLogModel == null) {
+            throw new IllegalArgumentException("CommitLogModel is null");
+        }
         checkCommitLogHasEnableSpace(commitLogMessageModel);
         mappedByteBuffer.put(commitLogMessageModel.convertToBytes());
+        commitLogModel.getOffset().addAndGet(commitLogMessageModel.getSize());
         if (force) {
             mappedByteBuffer.force();
         }
@@ -191,7 +200,7 @@ public class MMapFileModel {
     private void checkCommitLogHasEnableSpace(CommitLogMessageModel commitLogMessageModel) throws IOException {
         MQTopicModel mqTopicModel = CommonCache.getMqTopicModelMap().get(topic);
         CommitLogModel commitLogModel = mqTopicModel.getCommitLogModel();
-        long space = commitLogModel.getOffsetLimit() - commitLogModel.getOffset();
+        long space = commitLogModel.diff();
         if (commitLogMessageModel.getSize() > space) {
             String newCommitLogFile = createNewCommitLogFile(topic, commitLogModel);
             doMMap(newCommitLogFile, 0, COMMIT_LOG_DEFAULT_MAPPED_SIZE);

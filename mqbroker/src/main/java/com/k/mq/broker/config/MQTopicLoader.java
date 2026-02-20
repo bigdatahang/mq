@@ -43,6 +43,7 @@ public class MQTopicLoader {
                         Map<String, MQTopicModel> mqTopicModelMap = CommonCache.getMqTopicModelMap();
                         List<MQTopicModel> mqTopicModelList = new ArrayList<>(mqTopicModelMap.values());
                         FileContentUtil.overwriteToFile(filePath, JSON.toJSONString(mqTopicModelList));
+                        System.out.println("定时线程 开始刷写磁盘");
                     }
                 }, 0, 15, TimeUnit.SECONDS
         );

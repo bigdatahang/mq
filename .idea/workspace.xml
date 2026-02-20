@@ -5,9 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46c3923b-c68f-4f66-b38e-c0453291e829" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/constants/BrokerConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/constants/BrokerConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/broker/config/mq-topic.json" beforeDir="false" afterPath="$PROJECT_DIR$/broker/config/mq-topic.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/broker/store/order_cancel_topic/00000000" beforeDir="false" afterPath="$PROJECT_DIR$/broker/store/order_cancel_topic/00000000" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/BrokerStartUp.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/BrokerStartUp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/MQTopicLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/MQTopicLoader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/CommitLogAppenderHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/CommitLogAppenderHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/MMapFileModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/MMapFileModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/model/CommitLogModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/model/CommitLogModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/FileContentUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/FileContentUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

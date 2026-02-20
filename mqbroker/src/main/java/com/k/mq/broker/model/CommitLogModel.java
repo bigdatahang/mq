@@ -1,9 +1,11 @@
 package com.k.mq.broker.model;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 public class CommitLogModel {
     private String fileName;
     private Long offsetLimit;
-    private Long offset;
+    private AtomicLong offset;
 
     public String getFileName() {
         return fileName;
@@ -21,12 +23,16 @@ public class CommitLogModel {
         this.offsetLimit = offsetLimit;
     }
 
-    public Long getOffset() {
+    public AtomicLong getOffset() {
         return offset;
     }
 
-    public void setOffset(Long offset) {
+    public void setOffset(AtomicLong offset) {
         this.offset = offset;
+    }
+
+    public Long diff() {
+        return this.offsetLimit - this.offset.get();
     }
 
     @Override

@@ -34,6 +34,7 @@ public class FileContentUtil {
     public static void overwriteToFile(String path, String content) {
         try (FileWriter fileWriter = new FileWriter(path)) {
             fileWriter.write(content);
+            fileWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,26 +1,24 @@
 [
   {
-    "topic": "order_cancel_topic",
     "latestCommitLog": {
       "fileName": "00000000",
-      "offsetLimit": 17658,
-      "offset": 100
+      "offset": 170,
+      "offsetLimit": 10000
     },
     "queueList": [
       {
+        "currentOffset": 2000,
         "id": 1,
-        "minOffset": 1001,
         "maxOffset": 10001,
-        "currentOffset": 2000
+        "minOffset": 1001
       },
       {
+        "currentOffset": 2000,
         "id": 2,
-        "minOffset": 1001,
         "maxOffset": 10001,
-        "currentOffset": 2000
+        "minOffset": 1001
       }
     ],
-    "createAt": 1771572958,
-    "updateAt": 1771572958
+    "topic": "order_cancel_topic"
   }
 ]

@@ -7,6 +7,7 @@ import com.k.mq.broker.core.CommitLogAppenderHandler;
 import com.k.mq.broker.model.MQTopicModel;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Broker启动类
@@ -62,11 +63,15 @@ public class BrokerStartUp {
      * @param args 命令行参数
      * @throws IOException 当初始化失败时抛出
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         initProperties();
         String topic = "order_cancel_topic";
-        String content = "this is a test content";
-        commitLogAppenderHandler.appendMessage(topic, content.getBytes());
+        for (int i = 0; i < 10; i++) {
+            String content = "this is content " + i;
+            commitLogAppenderHandler.appendMessage(topic, content.getBytes());
+            System.out.println("写入数据");
+            TimeUnit.SECONDS.sleep(5);
+        }
         commitLogAppenderHandler.readContent(topic);
     }
 }
