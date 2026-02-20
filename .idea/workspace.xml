@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46c3923b-c68f-4f66-b38e-c0453291e829" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/mqbroker/src/test/java/com/k/mq/broker/test/MMapUtilTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/broker/store/order_topic/00000000" beforeDir="false" afterPath="$PROJECT_DIR$/broker/store/order_topic/00000000" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqbroker/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/broker/store/order_cancel_topic/00000000" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/MMapFileModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/MMapFileModelManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/MessageAppenderHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/broker/store/order_topic/00000000" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,6 +40,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "JUnit.MMapUtilTest.testLoadFileInMMap.executor": "Run",
+    "JUnit.MMapUtilTest.testReadAndWrite.executor": "Run",
     "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
@@ -45,16 +48,30 @@
     "project.structure.last.edited": "项目",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "应用程序.MMapUtil.executor": "Run"
+    "应用程序.MMapUtil.executor": "Run",
+    "应用程序.MessageAppenderHandler.executor": "Run"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.MMapUtilTest.testReadAndWrite">
+  <component name="RunManager" selected="应用程序.MessageAppenderHandler">
     <configuration name="MMapUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.util.MMapUtil" />
       <module name="mqbroker" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.k.mq.broker.util.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MessageAppenderHandler" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.core.MessageAppenderHandler" />
+      <module name="mqbroker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.k.mq.broker.core.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -96,6 +113,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="应用程序.MessageAppenderHandler" />
         <item itemvalue="JUnit.MMapUtilTest.testReadAndWrite" />
         <item itemvalue="JUnit.MMapUtilTest.testLoadFileInMMap" />
         <item itemvalue="应用程序.MMapUtil" />
