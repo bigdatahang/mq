@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46c3923b-c68f-4f66-b38e-c0453291e829" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/broker/store/order_topic/00000000" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/MMapUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/MMapUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqbroker/src/test/java/com/k/mq/broker/test/MMapUtilTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/broker/store/order_topic/00000000" beforeDir="false" afterPath="$PROJECT_DIR$/broker/store/order_topic/00000000" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +37,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JUnit.MMapUtilTest.testLoadFileInMMap.executor": "Run",
     "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
@@ -46,7 +48,7 @@
     "应用程序.MMapUtil.executor": "Run"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.MMapUtilTest.testReadAndWrite">
     <configuration name="MMapUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.util.MMapUtil" />
       <module name="mqbroker" />
@@ -60,8 +62,42 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="MMapUtilTest.testLoadFileInMMap" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mqbroker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.k.mq.broker.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.k.mq.broker.test" />
+      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.test.MMapUtilTest" />
+      <option name="METHOD_NAME" value="testLoadFileInMMap" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MMapUtilTest.testReadAndWrite" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mqbroker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.k.mq.broker.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.k.mq.broker.test" />
+      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.test.MMapUtilTest" />
+      <option name="METHOD_NAME" value="testReadAndWrite" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.MMapUtilTest.testReadAndWrite" />
+        <item itemvalue="JUnit.MMapUtilTest.testLoadFileInMMap" />
         <item itemvalue="应用程序.MMapUtil" />
       </list>
     </recent_temporary>
