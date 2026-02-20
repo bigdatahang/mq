@@ -5,6 +5,8 @@ import com.k.mq.broker.model.CommitLogMessageModel;
 import com.k.mq.broker.model.CommitLogModel;
 import com.k.mq.broker.model.MQTopicModel;
 import com.k.mq.broker.util.CommitLogFileNameUtil;
+import com.k.mq.broker.util.PutMessageLock;
+import com.k.mq.broker.util.UnfairReentrantLock;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,8 +18,8 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.concurrent.atomic.AtomicLong;
 
-import static com.k.mq.broker.constants.BrokerConstants.BASE_STORE_PATH;
 import static com.k.mq.broker.constants.BrokerConstants.COMMIT_LOG_DEFAULT_MAPPED_SIZE;
 
 /**
@@ -45,6 +47,8 @@ public class MMapFileModel {
     private FileChannel fileChannel;
 
     private String topic;
+
+    private PutMessageLock lock = new UnfairReentrantLock();
 
     /**
      * 将文件加载到内存映射区
@@ -93,14 +97,10 @@ public class MMapFileModel {
         String filePath;
         if (diff == 0) {
             // offset已达到上限，需要创建新的CommitLog文件
-            filePath = createNewCommitLogFile(topic, commitLogModel);
+            filePath = createNewCommitLogFile(topic, commitLogModel).getFilePath();
         } else if (diff > 0) {
             // offset未达到上限，使用当前CommitLog文件
-            filePath = CommonCache.getGlobalProperties().getMqHome()
-                    + BASE_STORE_PATH
-                    + topic
-                    + "/"
-                    + commitLogModel.getFileName();
+            filePath = CommitLogFileNameUtil.buildCommitLogFileName(topic, commitLogModel.getFileName());
         } else {
             // offset超过了offsetLimit，这是异常情况
             throw new IllegalStateException(
@@ -109,6 +109,32 @@ public class MMapFileModel {
             );
         }
         return filePath;
+    }
+
+    class CommitLogFilePath {
+        private String fileName;
+        private String filePath;
+
+        public CommitLogFilePath(String fileName, String filePath) {
+            this.fileName = fileName;
+            this.filePath = filePath;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
+        }
+
+        public String getFilePath() {
+            return filePath;
+        }
+
+        public void setFilePath(String filePath) {
+            this.filePath = filePath;
+        }
     }
 
     /**
@@ -120,20 +146,16 @@ public class MMapFileModel {
      * @return 新创建的CommitLog文件的完整路径
      * @throws RuntimeException 当文件创建失败时抛出
      */
-    private String createNewCommitLogFile(String topic, CommitLogModel commitLogModel) {
+    private CommitLogFilePath createNewCommitLogFile(String topic, CommitLogModel commitLogModel) {
         // 生成新的文件名（在原文件名基础上递增）
         String newFileName = CommitLogFileNameUtil.incrCommitLogName(commitLogModel.getFileName());
 
         // 构建完整的文件路径
-        String fullPath = CommonCache.getGlobalProperties().getMqHome()
-                + BASE_STORE_PATH
-                + topic
-                + "/"
-                + newFileName;
+        String newFilePath = CommitLogFileNameUtil.buildCommitLogFileName(topic, newFileName);
 
         // 创建物理文件
         try {
-            File file = new File(fullPath);  // 使用完整路径而不是只有文件名
+            File file = new File(newFilePath);  // 使用完整路径而不是只有文件名
             // 确保父目录存在
             File parentDir = file.getParentFile();
             if (parentDir != null && !parentDir.exists()) {
@@ -142,10 +164,9 @@ public class MMapFileModel {
             // 创建文件
             file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to create CommitLog file: " + fullPath, e);
+            throw new RuntimeException("Failed to create CommitLog file: " + newFilePath, e);
         }
-
-        return fullPath;
+        return new CommitLogFilePath(newFileName, newFilePath);
     }
 
     /**
@@ -190,11 +211,15 @@ public class MMapFileModel {
             throw new IllegalArgumentException("CommitLogModel is null");
         }
         checkCommitLogHasEnableSpace(commitLogMessageModel);
+        long currentOffset = commitLogModel.getOffset().get();
+        lock.lock();
+        mappedByteBuffer.position((int) currentOffset);
         mappedByteBuffer.put(commitLogMessageModel.convertToBytes());
         commitLogModel.getOffset().addAndGet(commitLogMessageModel.getSize());
         if (force) {
             mappedByteBuffer.force();
         }
+        lock.unlock();
     }
 
     private void checkCommitLogHasEnableSpace(CommitLogMessageModel commitLogMessageModel) throws IOException {
@@ -202,8 +227,12 @@ public class MMapFileModel {
         CommitLogModel commitLogModel = mqTopicModel.getCommitLogModel();
         long space = commitLogModel.diff();
         if (commitLogMessageModel.getSize() > space) {
-            String newCommitLogFile = createNewCommitLogFile(topic, commitLogModel);
-            doMMap(newCommitLogFile, 0, COMMIT_LOG_DEFAULT_MAPPED_SIZE);
+            CommitLogFilePath newCommitLogFile = createNewCommitLogFile(topic, commitLogModel);
+            commitLogModel.setOffset(new AtomicLong(0));
+            commitLogModel.setOffsetLimit(Long.valueOf(COMMIT_LOG_DEFAULT_MAPPED_SIZE));
+            commitLogModel.setFileName(newCommitLogFile.getFileName());
+
+            doMMap(newCommitLogFile.getFilePath(), 0, COMMIT_LOG_DEFAULT_MAPPED_SIZE);
         }
     }
 

@@ -1,5 +1,9 @@
 package com.k.mq.broker.util;
 
+import com.k.mq.broker.cache.CommonCache;
+
+import static com.k.mq.broker.constants.BrokerConstants.BASE_STORE_PATH;
+
 /**
  * CommitLog文件名工具类
  * 用于生成和管理CommitLog文件的命名规则
@@ -68,5 +72,13 @@ public class CommitLogFileNameUtil {
         // 递增并格式化为8位数字
         fileNumber++;
         return String.format("%08d", fileNumber);
+    }
+
+    public static String buildCommitLogFileName(String topic, String commitLogFileName) {
+        return CommonCache.getGlobalProperties().getMqHome()
+                + BASE_STORE_PATH
+                + topic
+                + "/"
+                + commitLogFileName;
     }
 }

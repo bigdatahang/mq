@@ -10,6 +10,9 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.concurrent.CountDownLatch;
+
+import static com.k.mq.broker.constants.BrokerConstants.COMMIT_LOG_DEFAULT_MAPPED_SIZE;
 
 /**
  * 内存映射文件工具类
@@ -27,10 +30,10 @@ public class MMapUtil {
     /**
      * 将文件加载到内存映射区
      *
-     * @param filePath 文件路径
+     * @param filePath    文件路径
      * @param startOffset 映射起始偏移量
-     * @param mappedSize 映射大小（字节数）
-     * @throws IOException 当文件操作失败时抛出
+     * @param mappedSize  映射大小（字节数）
+     * @throws IOException           当文件操作失败时抛出
      * @throws FileNotFoundException 当文件不存在时抛出
      */
     public void loadFileInMMap(String filePath, int startOffset, int mappedSize) throws IOException {
@@ -84,14 +87,15 @@ public class MMapUtil {
     /**
      * 清理MappedByteBuffer占用的内存
      * 解决JDK8中MappedByteBuffer导致文件无法删除的问题
-     * 
+     * <p>
      * 实现原理：
      * 1. 通过 viewed() 方法获取真正的 DirectByteBuffer（可能被包装过）
      * 2. 通过反射调用 DirectByteBuffer 的 cleaner() 方法获取 sun.misc.Cleaner 对象
      * 3. 调用 Cleaner 的 clean() 方法释放内存映射
-     * 
+     * <p>
      * 等价于：viewed(mappedByteBuffer).cleaner().clean()
-     */    public void clean() {
+     */
+    public void clean() {
         // 检查 MappedByteBuffer 是否有效
         if (mappedByteBuffer == null || !mappedByteBuffer.isDirect() || mappedByteBuffer.capacity() == 0) return;
         // 链式调用：获取 viewed buffer -> 获取 cleaner -> 执行 clean
@@ -101,10 +105,10 @@ public class MMapUtil {
     /**
      * 通过反射调用对象的方法
      * 使用特权操作确保在安全管理器下也能正常执行
-     * 
-     * @param target 目标对象
+     *
+     * @param target     目标对象
      * @param methodName 方法名
-     * @param args 方法参数类型
+     * @param args       方法参数类型
      * @return 方法调用的返回值
      * @throws IllegalStateException 如果反射调用失败
      */
@@ -131,10 +135,10 @@ public class MMapUtil {
     /**
      * 获取目标对象的指定方法
      * 先尝试获取public方法（包括继承的），如果找不到再获取当前类声明的方法（包括private）
-     * 
-     * @param target 目标对象
+     *
+     * @param target     目标对象
      * @param methodName 方法名
-     * @param args 方法参数类型
+     * @param args       方法参数类型
      * @return Method对象
      * @throws NoSuchMethodException 如果方法不存在
      */
@@ -152,14 +156,14 @@ public class MMapUtil {
      * 递归获取真正的DirectByteBuffer
      * 因为MappedByteBuffer可能被包装过（如通过slice()或duplicate()），
      * 需要递归调用viewedBuffer()或attachment()方法找到最底层的DirectByteBuffer
-     * 
+     *
      * @param buffer ByteBuffer对象
      * @return 真正的DirectByteBuffer
      */
     private ByteBuffer viewed(ByteBuffer buffer) {
         // 默认使用viewedBuffer方法名（JDK 8）
         String methodName = "viewedBuffer";
-        
+
         // 检查是否有attachment方法（JDK 9+）
         Method[] methods = buffer.getClass().getMethods();
         for (Method method : methods) {
@@ -168,14 +172,43 @@ public class MMapUtil {
                 break;
             }
         }
-        
+
         // 调用viewedBuffer()或attachment()方法获取底层buffer
         ByteBuffer viewedBuffer = (ByteBuffer) invoke(buffer, methodName);
-        
+
         // 如果返回null，说明当前buffer就是最底层的
         if (viewedBuffer == null) return buffer;
-        
+
         // 否则继续递归查找
         return viewed(viewedBuffer);
+    }
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+        String filePath = "/Users/yihang07/code/mq/broker/store/order_cancel_topic/00000000";
+        CountDownLatch count = new CountDownLatch(1);
+        CountDownLatch allWritesSuccess = new CountDownLatch(10);
+        MMapUtil mmapUtil = new MMapUtil();
+        mmapUtil.loadFileInMMap(filePath, 0, COMMIT_LOG_DEFAULT_MAPPED_SIZE);
+        for (int i = 0; i < 10; i++) {
+            int finalI = i;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        count.await();
+                        mmapUtil.writeContent(("this is a content " + finalI).getBytes());
+                        allWritesSuccess.countDown();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }).start();
+        }
+        System.out.println("准备执行并发写入测试");
+        count.countDown();
+        allWritesSuccess.await();
+        System.out.println("并发测试完毕，读取文件内容测试");
+        byte[] content = mmapUtil.readContent(0, 1000);
+        System.out.println("内容:" + new String(content));
     }
 }

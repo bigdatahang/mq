@@ -66,7 +66,7 @@ public class BrokerStartUp {
     public static void main(String[] args) throws IOException, InterruptedException {
         initProperties();
         String topic = "order_cancel_topic";
-        for (int i = 0; i < 10; i++) {
+        for (int i = 10; i < 20; i++) {
             String content = "this is content " + i;
             commitLogAppenderHandler.appendMessage(topic, content.getBytes());
             System.out.println("写入数据");

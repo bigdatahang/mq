@@ -5,14 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46c3923b-c68f-4f66-b38e-c0453291e829" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/PutMessageLock.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/SpinLock.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/UnfairReentrantLock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/broker/config/mq-topic.json" beforeDir="false" afterPath="$PROJECT_DIR$/broker/config/mq-topic.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/broker/store/order_cancel_topic/00000000" beforeDir="false" afterPath="$PROJECT_DIR$/broker/store/order_cancel_topic/00000000" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/BrokerStartUp.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/BrokerStartUp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/MQTopicLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/config/MQTopicLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/CommitLogAppenderHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/CommitLogAppenderHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/MMapFileModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/core/MMapFileModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/model/CommitLogModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/model/CommitLogModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/FileContentUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/FileContentUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/CommitLogFileNameUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/CommitLogFileNameUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/MMapUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/mqbroker/src/main/java/com/k/mq/broker/util/MMapUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +24,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -62,7 +65,8 @@
     "应用程序.CommitLogFileNameUtil.executor": "Run",
     "应用程序.FileContentReaderUtil.executor": "Run",
     "应用程序.MMapUtil.executor": "Run",
-    "应用程序.MessageAppenderHandler.executor": "Run"
+    "应用程序.MessageAppenderHandler.executor": "Run",
+    "应用程序.SpinLock.executor": "Run"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -70,7 +74,7 @@
       <recent name="$PROJECT_DIR$/broker/store/order_cancel_topic" />
     </key>
   </component>
-  <component name="RunManager" selected="应用程序.BrokerStartUp">
+  <component name="RunManager" selected="应用程序.SpinLock">
     <configuration name="BrokerStartUp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.BrokerStartUp" />
       <module name="mqbroker" />
@@ -97,19 +101,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CommitLogAppenderHandler" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.core.CommitLogAppenderHandler" />
-      <module name="mqbroker" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.k.mq.broker.core.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="CommitLogFileNameUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.util.CommitLogFileNameUtil" />
       <module name="mqbroker" />
@@ -123,8 +114,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="FileContentReaderUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.util.FileContentReaderUtil" />
+    <configuration name="MMapUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.util.MMapUtil" />
+      <module name="mqbroker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.k.mq.broker.util.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SpinLock" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.k.mq.broker.util.SpinLock" />
       <module name="mqbroker" />
       <extension name="coverage">
         <pattern>
@@ -138,11 +142,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="应用程序.SpinLock" />
+        <item itemvalue="应用程序.MMapUtil" />
         <item itemvalue="应用程序.BrokerStartUp" />
         <item itemvalue="应用程序.ByteConvertUtil" />
         <item itemvalue="应用程序.CommitLogFileNameUtil" />
-        <item itemvalue="应用程序.FileContentReaderUtil" />
-        <item itemvalue="应用程序.CommitLogAppenderHandler" />
       </list>
     </recent_temporary>
   </component>
