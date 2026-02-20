@@ -163,6 +163,7 @@ public class MMapFileModel {
             }
             // 创建文件
             file.createNewFile();
+            System.out.println("创建新的commitLog文件");
         } catch (IOException e) {
             throw new RuntimeException("Failed to create CommitLog file: " + newFilePath, e);
         }
@@ -210,23 +211,50 @@ public class MMapFileModel {
         if (commitLogModel == null) {
             throw new IllegalArgumentException("CommitLogModel is null");
         }
-        checkCommitLogHasEnableSpace(commitLogMessageModel);
-        long currentOffset = commitLogModel.getOffset().get();
+        
         lock.lock();
-        mappedByteBuffer.position((int) currentOffset);
-        mappedByteBuffer.put(commitLogMessageModel.convertToBytes());
-        commitLogModel.getOffset().addAndGet(commitLogMessageModel.getSize());
-        if (force) {
-            mappedByteBuffer.force();
+        try {
+            // 【修复】先转换为字节数组，获取实际要写入的字节数
+            byte[] writeContent = commitLogMessageModel.convertToBytes();
+            
+            // 使用实际字节数组的长度来检查空间
+            checkCommitLogHasEnableSpace(writeContent.length, commitLogModel);
+            
+            // 设置position到当前offset
+            long currentOffset = commitLogModel.getOffset().get();
+            mappedByteBuffer.position((int) currentOffset);
+            
+            // 写入数据
+            mappedByteBuffer.put(writeContent);
+            
+            // 更新offset（使用实际写入的长度）
+            commitLogModel.getOffset().addAndGet(writeContent.length);
+            
+            // 强制刷盘
+            if (force) {
+                mappedByteBuffer.force();
+            }
+        } finally {
+            lock.unlock();
         }
-        lock.unlock();
     }
 
-    private void checkCommitLogHasEnableSpace(CommitLogMessageModel commitLogMessageModel) throws IOException {
+    private void checkCommitLogHasEnableSpace(int messageSize, CommitLogModel commitLogModel) throws IOException {
         MQTopicModel mqTopicModel = CommonCache.getMqTopicModelMap().get(topic);
-        CommitLogModel commitLogModel = mqTopicModel.getCommitLogModel();
+        
+        // 获取业务层面的剩余空间
         long space = commitLogModel.diff();
-        if (commitLogMessageModel.getSize() > space) {
+        
+        // 【修复】检查MappedByteBuffer的实际剩余空间
+        // 当前offset位置之后的实际可用空间
+        long currentOffset = commitLogModel.getOffset().get();
+        int bufferRemaining = mappedByteBuffer.capacity() - (int) currentOffset;
+        
+        // 使用实际剩余空间和业务剩余空间中的较小值
+        long actualSpace = Math.min(space, bufferRemaining);
+        
+        // 如果消息大小超过实际可用空间，需要创建新文件
+        if (messageSize > actualSpace) {
             CommitLogFilePath newCommitLogFile = createNewCommitLogFile(topic, commitLogModel);
             commitLogModel.setOffset(new AtomicLong(0));
             commitLogModel.setOffsetLimit(Long.valueOf(COMMIT_LOG_DEFAULT_MAPPED_SIZE));

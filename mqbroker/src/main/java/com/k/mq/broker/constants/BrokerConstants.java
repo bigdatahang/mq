@@ -7,9 +7,14 @@ package com.k.mq.broker.constants;
  * @author yihang07
  */
 public class BrokerConstants {
-    /** MQ主目录环境变量名 */
+    /**
+     * MQ主目录环境变量名
+     */
     public static final String MQ_HOME = "MQ_HOME";
-    /** 基础存储路径 */
+    /**
+     * 基础存储路径
+     */
     public static final String BASE_STORE_PATH = "/broker/store/";
     public static final Integer COMMIT_LOG_DEFAULT_MAPPED_SIZE = 1 * 1024 * 1024;
+    public static final Long DEFAULT_REFRESH_SECOND = 3L;
 }

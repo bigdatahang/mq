@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static com.k.mq.broker.constants.BrokerConstants.DEFAULT_REFRESH_SECOND;
+
 /**
  * MQ主题配置加载器
  * 从配置文件中加载Topic相关的配置信息
@@ -45,7 +47,7 @@ public class MQTopicLoader {
                         FileContentUtil.overwriteToFile(filePath, JSON.toJSONString(mqTopicModelList));
                         System.out.println("定时线程 开始刷写磁盘");
                     }
-                }, 0, 15, TimeUnit.SECONDS
+                }, 0, DEFAULT_REFRESH_SECOND, TimeUnit.SECONDS
         );
     }
 }
