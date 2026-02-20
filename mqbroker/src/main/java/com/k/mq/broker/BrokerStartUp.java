@@ -43,6 +43,9 @@ public class BrokerStartUp {
         mqTopicLoader = new MQTopicLoader();
         mqTopicLoader.loadProperties();
 
+        // 启动异步县线程刷写磁盘
+        mqTopicLoader.startRefreshMQTopicTask();
+
         // 初始化CommitLog处理器
         commitLogAppenderHandler = new CommitLogAppenderHandler();
 

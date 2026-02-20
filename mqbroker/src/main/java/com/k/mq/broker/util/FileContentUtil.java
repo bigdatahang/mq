@@ -1,22 +1,20 @@
 package com.k.mq.broker.util;
 
-import com.alibaba.fastjson2.JSON;
-import com.k.mq.broker.model.MQTopicModel;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.List;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * 文件内容读取工具类
  * 提供读取文件内容的工具方法
- * 
+ *
  * @author yihang07
  */
-public class FileContentReaderUtil {
+public class FileContentUtil {
     /**
      * 从文件中读取全部内容
-     * 
+     *
      * @param path 文件路径
      * @return 文件内容字符串
      * @throws RuntimeException 当文件读取失败时抛出
@@ -33,14 +31,11 @@ public class FileContentReaderUtil {
         }
     }
 
-    /**
-     * 测试入口
-     * 
-     * @param args 命令行参数
-     */
-    public static void main(String[] args) {
-        String json = readFromFile("/Users/yihang07/code/mq/broker/config/mq-topic.json");
-        List<MQTopicModel> mqTopicModels = JSON.parseArray(json, MQTopicModel.class);
-        System.out.println(mqTopicModels);
+    public static void overwriteToFile(String path, String content) {
+        try (FileWriter fileWriter = new FileWriter(path)) {
+            fileWriter.write(content);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

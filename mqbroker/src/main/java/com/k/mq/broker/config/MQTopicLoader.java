@@ -3,12 +3,13 @@ package com.k.mq.broker.config;
 import com.alibaba.fastjson.JSON;
 import com.k.mq.broker.cache.CommonCache;
 import com.k.mq.broker.model.MQTopicModel;
-import com.k.mq.broker.util.FileContentReaderUtil;
+import com.k.mq.broker.util.FileContentUtil;
 import io.netty.util.internal.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * MQ主题配置加载器
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
  * @author yihang07
  */
 public class MQTopicLoader {
+    private String filePath;
 
     /**
      * 加载Topic配置
@@ -28,9 +30,21 @@ public class MQTopicLoader {
         if (StringUtil.isNullOrEmpty(mqHome)) {
             throw new IllegalArgumentException("MQ_HOME IS NULL");
         }
-        String jsonFilePath = mqHome + "/broker/config/mq-topic.json";
-        List<MQTopicModel> mqTopicModelList = JSON.parseArray(FileContentReaderUtil.readFromFile(jsonFilePath), MQTopicModel.class);
-        Map<String, MQTopicModel> mqTopicModelMap = mqTopicModelList.stream().collect(Collectors.toMap(MQTopicModel::getTopic, item -> item));
-        CommonCache.setMqTopicModelMap(mqTopicModelMap);
+        filePath = mqHome + "/broker/config/mq-topic.json";
+        List<MQTopicModel> mqTopicModelList = JSON.parseArray(FileContentUtil.readFromFile(filePath), MQTopicModel.class);
+        CommonCache.setMqTopicModelList(mqTopicModelList);
+    }
+
+    public void startRefreshMQTopicTask() {
+        CommonThreadPoolConfig.refreshThreadExecutor.scheduleAtFixedRate(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        Map<String, MQTopicModel> mqTopicModelMap = CommonCache.getMqTopicModelMap();
+                        List<MQTopicModel> mqTopicModelList = new ArrayList<>(mqTopicModelMap.values());
+                        FileContentUtil.overwriteToFile(filePath, JSON.toJSONString(mqTopicModelList));
+                    }
+                }, 0, 15, TimeUnit.SECONDS
+        );
     }
 }

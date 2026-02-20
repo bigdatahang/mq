@@ -3,7 +3,10 @@ package com.k.mq.broker.cache;
 import com.k.mq.broker.config.GlobalProperties;
 import com.k.mq.broker.model.MQTopicModel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 全局缓存类
@@ -15,9 +18,9 @@ public class CommonCache {
     /**
      * 全局配置对象
      */
-    public static GlobalProperties globalProperties;
+    public static GlobalProperties globalProperties = new GlobalProperties();
 
-    public static Map<String, MQTopicModel> mqTopicModelMap;
+    public static List<MQTopicModel> mqTopicModelList = new ArrayList<>();
 
     /**
      * 获取全局配置
@@ -38,10 +41,10 @@ public class CommonCache {
     }
 
     public static Map<String, MQTopicModel> getMqTopicModelMap() {
-        return mqTopicModelMap;
+        return mqTopicModelList.stream().collect(Collectors.toMap(MQTopicModel::getTopic, item -> item));
     }
 
-    public static void setMqTopicModelMap(Map<String, MQTopicModel> mqTopicModelMap) {
-        CommonCache.mqTopicModelMap = mqTopicModelMap;
+    public static void setMqTopicModelList(List<MQTopicModel> mqTopicModelList) {
+        CommonCache.mqTopicModelList = mqTopicModelList;
     }
 }
