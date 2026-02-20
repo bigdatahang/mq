@@ -62,7 +62,8 @@ public class BrokerStartUp {
     public static void main(String[] args) throws IOException {
         initProperties();
         String topic = "order_cancel_topic";
-        commitLogAppenderHandler.appendMessage(topic, "this is a new test");
+        String content = "this is a test content";
+        commitLogAppenderHandler.appendMessage(topic, content.getBytes());
         commitLogAppenderHandler.readContent(topic);
     }
 }

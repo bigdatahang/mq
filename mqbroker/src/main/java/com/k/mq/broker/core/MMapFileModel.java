@@ -1,5 +1,7 @@
 package com.k.mq.broker.core;
 
+import com.k.mq.broker.model.CommitLogMessageModel;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,18 +17,24 @@ import java.security.PrivilegedAction;
  * 内存映射文件模型
  * 提供基于MMap（内存映射文件）的文件读写操作
  * 通过将文件映射到内存，实现高效的文件IO操作
- * 
+ * <p>
  * 注意：JDK8存在bug，使用FileChannel.map映射后文件无法删除
  * 本类参考RocketMQ实现，通过反射调用Cleaner释放内存映射
  *
  * @author yihang07
  */
 public class MMapFileModel {
-    /** 文件对象 */
+    /**
+     * 文件对象
+     */
     private File file;
-    /** 内存映射缓冲区 */
+    /**
+     * 内存映射缓冲区
+     */
     private MappedByteBuffer mappedByteBuffer;
-    /** 文件通道 */
+    /**
+     * 文件通道
+     */
     private FileChannel fileChannel;
 
     /**
@@ -67,20 +75,20 @@ public class MMapFileModel {
     /**
      * 向映射内存写入内容（非强制刷盘）
      *
-     * @param content 要写入的字节数组
+     * @param commitLogMessageModel 要写入的commitLogMessageModel对象
      */
-    public void writeContent(byte[] content) {
-        this.writeContent(content, false);
+    public void writeContent(CommitLogMessageModel commitLogMessageModel) {
+        this.writeContent(commitLogMessageModel, false);
     }
 
     /**
      * 向映射内存写入内容
      *
-     * @param content 要写入的字节数组
-     * @param force   是否强制刷盘到磁盘
+     * @param commitLogMessageModel 要写入的commitLogMessageModel对象
+     * @param force                 是否强制刷盘到磁盘
      */
-    public void writeContent(byte[] content, boolean force) {
-        mappedByteBuffer.put(content);
+    public void writeContent(CommitLogMessageModel commitLogMessageModel, boolean force) {
+        mappedByteBuffer.put(commitLogMessageModel.convertToBytes());
         if (force) {
             mappedByteBuffer.force();
         }

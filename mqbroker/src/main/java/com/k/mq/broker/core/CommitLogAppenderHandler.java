@@ -1,6 +1,7 @@
 package com.k.mq.broker.core;
 
 import com.k.mq.broker.cache.CommonCache;
+import com.k.mq.broker.model.CommitLogMessageModel;
 import com.k.mq.broker.model.CommitLogModel;
 import com.k.mq.broker.model.MQTopicModel;
 import com.k.mq.broker.util.CommitLogFileNameUtil;
@@ -42,7 +43,7 @@ public class CommitLogAppenderHandler {
      * @param topic 主题名称
      * @return CommitLog文件的完整路径
      * @throws IllegalArgumentException 如果Topic不存在
-     * @throws IllegalStateException 如果offset超过offsetLimit
+     * @throws IllegalStateException    如果offset超过offsetLimit
      */
     private String getLatestCommitLogFile(String topic) {
         // 从缓存中获取Topic配置
@@ -50,11 +51,11 @@ public class CommitLogAppenderHandler {
         if (mqTopicModel == null) {
             throw new IllegalArgumentException("topic does not exist, topic is: " + topic);
         }
-        
+
         // 获取CommitLog配置信息
         CommitLogModel commitLogModel = mqTopicModel.getCommitLogModel();
         long diff = commitLogModel.getOffsetLimit() - commitLogModel.getOffset();
-        
+
         String filePath;
         if (diff == 0) {
             // offset已达到上限，需要创建新的CommitLog文件
@@ -69,8 +70,8 @@ public class CommitLogAppenderHandler {
         } else {
             // offset超过了offsetLimit，这是异常情况
             throw new IllegalStateException(
-                String.format("Invalid CommitLog state for topic '%s': offset=%d, offsetLimit=%d",
-                    topic, commitLogModel.getOffset(), commitLogModel.getOffsetLimit())
+                    String.format("Invalid CommitLog state for topic '%s': offset=%d, offsetLimit=%d",
+                            topic, commitLogModel.getOffset(), commitLogModel.getOffsetLimit())
             );
         }
         return filePath;
@@ -80,7 +81,7 @@ public class CommitLogAppenderHandler {
      * 创建新的CommitLog文件
      * 生成新的文件名（递增），创建物理文件，并返回完整路径
      *
-     * @param topic 主题名称
+     * @param topic          主题名称
      * @param commitLogModel CommitLog配置模型
      * @return 新创建的CommitLog文件的完整路径
      * @throws RuntimeException 当文件创建失败时抛出
@@ -88,14 +89,14 @@ public class CommitLogAppenderHandler {
     private String createNewCommitLogFile(String topic, CommitLogModel commitLogModel) {
         // 生成新的文件名（在原文件名基础上递增）
         String newFileName = CommitLogFileNameUtil.incrCommitLogName(commitLogModel.getFileName());
-        
+
         // 构建完整的文件路径
         String fullPath = CommonCache.getGlobalProperties().getMqHome()
                 + BASE_STORE_PATH
                 + topic
                 + "/"
                 + newFileName;
-        
+
         // 创建物理文件
         try {
             File file = new File(fullPath);  // 使用完整路径而不是只有文件名
@@ -109,7 +110,7 @@ public class CommitLogAppenderHandler {
         } catch (IOException e) {
             throw new RuntimeException("Failed to create CommitLog file: " + fullPath, e);
         }
-        
+
         return fullPath;
     }
 
@@ -120,12 +121,15 @@ public class CommitLogAppenderHandler {
      * @param content 消息内容
      * @throws RuntimeException 当Topic不存在时抛出
      */
-    public void appendMessage(String topic, String content) {
+    public void appendMessage(String topic, byte[] content) {
         MMapFileModel mmapFileModel = mmapFileModelManager.get(topic);
         if (mmapFileModel == null) {
             throw new RuntimeException("topic does not exist");
         }
-        mmapFileModel.writeContent(content.getBytes());
+        CommitLogMessageModel commitLogMessageModel = new CommitLogMessageModel();
+        commitLogMessageModel.setContent(content);
+        commitLogMessageModel.setSize(content.length);
+        mmapFileModel.writeContent(commitLogMessageModel);
     }
 
     /**
