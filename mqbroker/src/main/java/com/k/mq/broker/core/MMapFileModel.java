@@ -295,25 +295,56 @@ public class MMapFileModel {
         }
     }
 
+    /**
+     * 消息分发到ConsumeQueue
+     * 将消息在CommitLog中的位置信息写入对应的ConsumeQueue
+     *
+     * @param writeContent 写入CommitLog的消息内容（用于计算长度）
+     * @param msgIndex     消息在CommitLog中的物理偏移量
+     * @throws IOException              当写入ConsumeQueue失败时抛出
+     * @throws IllegalArgumentException 当Topic或Queue不存在时抛出
+     */
     private void dispatcher(byte[] writeContent, int msgIndex) throws IOException {
         MQTopicModel mqTopicModel = CommonCache.getMqTopicModelMap().get(topic);
         if (mqTopicModel == null) {
-            throw new RuntimeException("MQTopicModel IS NULL");
+            throw new IllegalArgumentException("MQTopicModel is null for topic: " + topic);
         }
-        // TODO queueId的计算逻辑
+
+        // TODO: queueId的计算逻辑（负载均衡策略）
+        // 可选策略：
+        // 1. 轮询（Round Robin）
+        // 2. Hash取模（Hash Mod）
+        // 3. 随机（Random）
+        // 当前使用简单策略：固定写入队列0
         int queueId = 0;
+
+        // 构建ConsumeQueue索引数据
         ConsumeQueueDetailModel consumeQueueDetailModel = new ConsumeQueueDetailModel();
-        consumeQueueDetailModel.setCommitLogFileName(Integer.parseInt(mqTopicModel.getCommitLogModel().getFileName()));
+        consumeQueueDetailModel.setCommitLogFileName(
+                Integer.parseInt(mqTopicModel.getCommitLogModel().getFileName())
+        );
         consumeQueueDetailModel.setMsgIndex(msgIndex);
         consumeQueueDetailModel.setMsgLength(writeContent.length);
         byte[] content = consumeQueueDetailModel.convertToBytes();
-        List<ConsumeQueueMMapFileModel> consumeQueueMMapFileModels = CommonCache.getConsumeQueueMMapFileModelManager().get(topic);
-        ConsumeQueueMMapFileModel consumeQueueMMapFileModel = consumeQueueMMapFileModels.stream().filter(queueModel -> queueModel.getQueueId().equals(queueId)).findFirst().orElse(null);
-        if (consumeQueueMMapFileModel != null) {
-            consumeQueueMMapFileModel.writeContent(content);
+
+        // 获取ConsumeQueue映射管理器
+        ConsumeQueueMMapFileModelManager manager = CommonCache.getConsumeQueueMMapFileModelManager();
+        if (manager == null) {
+            throw new IllegalStateException("ConsumeQueueMMapFileModelManager is not initialized");
         }
-        QueueModel queueModel = mqTopicModel.getQueueList().get(queueId);
-        queueModel.getLatestOffset().addAndGet(content.length);
+
+        // 获取指定队列的ConsumeQueue映射模型
+        ConsumeQueueMMapFileModel consumeQueueMMapFileModel = manager.get(topic, queueId);
+        if (consumeQueueMMapFileModel == null) {
+            throw new IllegalStateException(
+                    String.format("ConsumeQueueMMapFileModel not found for topic: %s, queueId: %d", 
+                            topic, queueId)
+            );
+        }
+
+        // 写入ConsumeQueue
+        // 注意：writeContent() 方法内部已经处理了offset的更新，这里不需要再次更新
+        consumeQueueMMapFileModel.writeContent(content);
     }
 
     /**
