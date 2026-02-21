@@ -84,7 +84,7 @@ mq/
 ├── broker/                      # Broker 数据目录
 │   ├── config/                  # 配置文件
 │   │   └── mq-topic.json
-│   └── store/                   # 消息存储
+│   └── commitlog/               # 消息存储
 │       └── {topic}/             # 按 Topic 分目录
 │           └── {commitlog}      # CommitLog 文件
 └── pom.xml

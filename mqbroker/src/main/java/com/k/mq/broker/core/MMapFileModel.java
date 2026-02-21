@@ -19,7 +19,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.k.mq.broker.constants.BrokerConstants.COMMIT_LOG_DEFAULT_MAPPED_SIZE;
 
@@ -278,7 +278,7 @@ public class MMapFileModel {
             checkCommitLogHasEnableSpace(writeContent.length, commitLogModel);
 
             // 设置position到当前offset
-            long currentOffset = commitLogModel.getOffset().get();
+            int currentOffset = commitLogModel.getOffset().get();
             mappedByteBuffer.position((int) currentOffset);
 
             // 写入数据
@@ -297,13 +297,13 @@ public class MMapFileModel {
         }
     }
 
-    private void dispatcher(byte[] writeContent, long msgIndex) {
+    private void dispatcher(byte[] writeContent, int msgIndex) {
         MQTopicModel mqTopicModel = CommonCache.getMqTopicModelMap().get(topic);
         if (mqTopicModel == null) {
             throw new RuntimeException("MQTopicModel IS NULL");
         }
         ConsumeQueueModel consumeQueueModel = new ConsumeQueueModel();
-        consumeQueueModel.setCommitLogFileName(mqTopicModel.getCommitLogModel().getFileName());
+        consumeQueueModel.setCommitLogFileName(Integer.parseInt(mqTopicModel.getCommitLogModel().getFileName()));
         consumeQueueModel.setMsgIndex(msgIndex);
         consumeQueueModel.setMsgLength(writeContent.length);
     }
@@ -317,8 +317,6 @@ public class MMapFileModel {
      * @throws IOException 当创建新文件或映射失败时抛出
      */
     private void checkCommitLogHasEnableSpace(int messageSize, CommitLogModel commitLogModel) throws IOException {
-        MQTopicModel mqTopicModel = CommonCache.getMqTopicModelMap().get(topic);
-
         // 获取业务层面的剩余空间
         long space = commitLogModel.diff();
 
@@ -333,7 +331,7 @@ public class MMapFileModel {
         // 如果消息大小超过实际可用空间，需要创建新文件
         if (messageSize > actualSpace) {
             CommitLogFilePath newCommitLogFile = createNewCommitLogFile(topic, commitLogModel);
-            commitLogModel.setOffset(new AtomicLong(0));
+            commitLogModel.setOffset(new AtomicInteger(0));
             commitLogModel.setOffsetLimit(Long.valueOf(COMMIT_LOG_DEFAULT_MAPPED_SIZE));
             commitLogModel.setFileName(newCommitLogFile.getFileName());
 

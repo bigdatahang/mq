@@ -184,7 +184,7 @@ public class MMapUtil {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        String filePath = "/Users/yihang07/code/mq/broker/store/order_cancel_topic/00000000";
+        String filePath = "/Users/yihang07/code/mq/broker/commitlog/order_cancel_topic/00000000";
         CountDownLatch count = new CountDownLatch(1);
         CountDownLatch allWritesSuccess = new CountDownLatch(10);
         MMapUtil mmapUtil = new MMapUtil();

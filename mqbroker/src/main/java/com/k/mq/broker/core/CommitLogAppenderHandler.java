@@ -44,7 +44,6 @@ public class CommitLogAppenderHandler {
         }
         CommitLogMessageModel commitLogMessageModel = new CommitLogMessageModel();
         commitLogMessageModel.setContent(content);
-        commitLogMessageModel.setSize(content.length);
         mmapFileModel.writeContent(commitLogMessageModel);
     }
 

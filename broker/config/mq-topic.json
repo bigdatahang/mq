@@ -1,8 +1,8 @@
 [
   {
     "latestCommitLog": {
-      "fileName": "00000001",
-      "offset": 190125,
+      "fileName": "00000000",
+      "offset": 0,
       "offsetLimit": 1048576
     },
     "queueList": [

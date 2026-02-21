@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class MMapUtilTest {
     private MMapUtil mmapUtil;
-    private String filePath = "/Users/yihang07/code/mq/broker/store/order_topic/00000000";
+    private String filePath = "/Users/yihang07/code/mq/broker/commitlog/order_topic/00000000";
 
     @Before
     public void setup() throws IOException {
