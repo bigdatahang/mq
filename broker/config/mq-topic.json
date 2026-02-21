@@ -5,18 +5,28 @@
       "offset": 0,
       "offsetLimit": 1048576
     },
+    "queueSize": 3,
     "queueList": [
       {
-        "currentOffset": 2000,
         "id": 1,
-        "maxOffset": 10001,
-        "minOffset": 1001
+        "fileName": "00000000",
+        "offsetLimit": 6291456,
+        "latestOffset": 0,
+        "lastOffset": 0
       },
       {
-        "currentOffset": 2000,
         "id": 2,
-        "maxOffset": 10001,
-        "minOffset": 1001
+        "fileName": "00000000",
+        "offsetLimit": 6291456,
+        "latestOffset": 0,
+        "lastOffset": 0
+      },
+      {
+        "id": 3,
+        "fileName": "00000000",
+        "offsetLimit": 6291456,
+        "latestOffset": 0,
+        "lastOffset": 0
       }
     ],
     "topic": "order_cancel_topic"

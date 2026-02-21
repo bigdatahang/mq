@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.k.mq.broker.constants.BrokerConstants.DEFAULT_REFRESH_SECOND;
+import static com.k.mq.broker.constants.BrokerConstants.DEFAULT_REFRESH_MQ_TOPIC_SECOND;
 
 /**
  * MQ主题配置加载器
@@ -41,16 +41,16 @@ public class MQTopicLoader {
      * 开启定时任务刷写JSON文件
      */
     public void startRefreshMQTopicTask() {
-        CommonThreadPoolConfig.refreshThreadExecutor.scheduleAtFixedRate(
+        CommonThreadPoolConfig.refreshMQTopicThreadExecutor.scheduleAtFixedRate(
                 new Runnable() {
                     @Override
                     public void run() {
                         Map<String, MQTopicModel> mqTopicModelMap = CommonCache.getMqTopicModelMap();
                         List<MQTopicModel> mqTopicModelList = new ArrayList<>(mqTopicModelMap.values());
                         FileContentUtil.overwriteToFile(filePath, JSON.toJSONString(mqTopicModelList));
-                        System.out.println("定时线程 开始刷写磁盘");
+                        System.out.println("定时线程 开始刷写mq-topic文件");
                     }
-                }, 0, DEFAULT_REFRESH_SECOND, TimeUnit.SECONDS
+                }, 0, DEFAULT_REFRESH_MQ_TOPIC_SECOND, TimeUnit.SECONDS
         );
     }
 }

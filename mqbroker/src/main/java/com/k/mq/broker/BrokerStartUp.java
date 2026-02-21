@@ -1,6 +1,7 @@
 package com.k.mq.broker;
 
 import com.k.mq.broker.cache.CommonCache;
+import com.k.mq.broker.config.ConsumeQueueOffsetLoader;
 import com.k.mq.broker.config.GlobalPropertiesLoader;
 import com.k.mq.broker.config.MQTopicLoader;
 import com.k.mq.broker.core.CommitLogAppenderHandler;
@@ -24,6 +25,8 @@ public class BrokerStartUp {
      * 全局配置加载器
      */
     public static GlobalPropertiesLoader globalPropertiesLoader;
+
+    public static ConsumeQueueOffsetLoader consumeQueueOffsetLoader;
     /**
      * CommitLog消息追加处理器
      */
@@ -43,6 +46,10 @@ public class BrokerStartUp {
         // 加载Topic配置
         mqTopicLoader = new MQTopicLoader();
         mqTopicLoader.loadProperties();
+
+        consumeQueueOffsetLoader = new ConsumeQueueOffsetLoader();
+        consumeQueueOffsetLoader.loadProperties();
+        consumeQueueOffsetLoader.startRefreshConsumeQueueOffsetTask();
 
         // 启动异步县线程刷写磁盘
         mqTopicLoader.startRefreshMQTopicTask();

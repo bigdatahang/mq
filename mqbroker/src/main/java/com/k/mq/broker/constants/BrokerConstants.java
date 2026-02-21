@@ -16,5 +16,7 @@ public class BrokerConstants {
      */
     public static final String BASE_STORE_PATH = "/broker/commitlog/";
     public static final Integer COMMIT_LOG_DEFAULT_MAPPED_SIZE = 1 * 1024 * 1024;
-    public static final Long DEFAULT_REFRESH_SECOND = 3L;
+    public static final Long DEFAULT_REFRESH_MQ_TOPIC_SECOND = 3L;
+    public static final Long DEFAULT_REFRESH_CONSUME_QUEUE_OFFSET_SECOND = 3L;
+
 }

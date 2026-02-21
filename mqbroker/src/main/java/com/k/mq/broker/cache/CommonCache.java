@@ -1,6 +1,7 @@
 package com.k.mq.broker.cache;
 
 import com.k.mq.broker.config.GlobalProperties;
+import com.k.mq.broker.model.ConsumeQueueOffsetModel;
 import com.k.mq.broker.model.MQTopicModel;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public class CommonCache {
     public static GlobalProperties globalProperties = new GlobalProperties();
 
     public static List<MQTopicModel> mqTopicModelList = new ArrayList<>();
+
+    public static ConsumeQueueOffsetModel consumeQueueOffsetModel = new ConsumeQueueOffsetModel();
 
     /**
      * 获取全局配置
@@ -46,5 +49,17 @@ public class CommonCache {
 
     public static void setMqTopicModelList(List<MQTopicModel> mqTopicModelList) {
         CommonCache.mqTopicModelList = mqTopicModelList;
+    }
+
+    public static List<MQTopicModel> getMqTopicModelList() {
+        return mqTopicModelList;
+    }
+
+    public static ConsumeQueueOffsetModel getConsumeQueueOffsetModel() {
+        return consumeQueueOffsetModel;
+    }
+
+    public static void setConsumeQueueOffsetModel(ConsumeQueueOffsetModel consumeQueueOffsetModel) {
+        CommonCache.consumeQueueOffsetModel = consumeQueueOffsetModel;
     }
 }
