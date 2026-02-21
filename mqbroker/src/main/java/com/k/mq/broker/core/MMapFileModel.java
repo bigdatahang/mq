@@ -3,7 +3,7 @@ package com.k.mq.broker.core;
 import com.k.mq.broker.cache.CommonCache;
 import com.k.mq.broker.model.CommitLogMessageModel;
 import com.k.mq.broker.model.CommitLogModel;
-import com.k.mq.broker.model.ConsumeQueueModel;
+import com.k.mq.broker.model.ConsumeQueueDetailModel;
 import com.k.mq.broker.model.MQTopicModel;
 import com.k.mq.broker.util.CommitLogFileNameUtil;
 import com.k.mq.broker.util.PutMessageLock;
@@ -302,10 +302,11 @@ public class MMapFileModel {
         if (mqTopicModel == null) {
             throw new RuntimeException("MQTopicModel IS NULL");
         }
-        ConsumeQueueModel consumeQueueModel = new ConsumeQueueModel();
-        consumeQueueModel.setCommitLogFileName(Integer.parseInt(mqTopicModel.getCommitLogModel().getFileName()));
-        consumeQueueModel.setMsgIndex(msgIndex);
-        consumeQueueModel.setMsgLength(writeContent.length);
+        ConsumeQueueDetailModel consumeQueueDetailModel = new ConsumeQueueDetailModel();
+        consumeQueueDetailModel.setCommitLogFileName(Integer.parseInt(mqTopicModel.getCommitLogModel().getFileName()));
+        consumeQueueDetailModel.setMsgIndex(msgIndex);
+        consumeQueueDetailModel.setMsgLength(writeContent.length);
+
     }
 
     /**

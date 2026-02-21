@@ -5,6 +5,7 @@ import com.k.mq.broker.config.ConsumeQueueOffsetLoader;
 import com.k.mq.broker.config.GlobalPropertiesLoader;
 import com.k.mq.broker.config.MQTopicLoader;
 import com.k.mq.broker.core.CommitLogAppenderHandler;
+import com.k.mq.broker.core.ConsumeQueueAppenderHandler;
 import com.k.mq.broker.model.MQTopicModel;
 
 import java.io.IOException;
@@ -32,6 +33,8 @@ public class BrokerStartUp {
      */
     public static CommitLogAppenderHandler commitLogAppenderHandler;
 
+    public static ConsumeQueueAppenderHandler consumeQueueAppenderHandler;
+
     /**
      * 初始化Broker的各项配置和资源
      * 包括全局配置、Topic配置、以及CommitLog文件的内存映射加载
@@ -56,11 +59,13 @@ public class BrokerStartUp {
 
         // 初始化CommitLog处理器
         commitLogAppenderHandler = new CommitLogAppenderHandler();
+        consumeQueueAppenderHandler = new ConsumeQueueAppenderHandler();
 
         // 为每个Topic准备CommitLog文件的内存映射
         for (MQTopicModel mqTopicModel : CommonCache.getMqTopicModelMap().values()) {
             String topic = mqTopicModel.getTopic();
             commitLogAppenderHandler.prepareMMapLoading(topic);
+            consumeQueueAppenderHandler.prepareConsumeQueueMMapLoading(topic);
         }
     }
 

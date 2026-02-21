@@ -33,7 +33,6 @@ public class CommitLogMessageModel {
 
     /**
      * 将消息转换为字节数组
-     * 格式：[4字节大小][消息内容]
      *
      * @return 完整的消息字节数组
      */
