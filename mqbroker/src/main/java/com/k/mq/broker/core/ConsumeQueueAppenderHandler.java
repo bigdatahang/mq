@@ -19,7 +19,6 @@ public class ConsumeQueueAppenderHandler {
             ConsumeQueueMMapFileModel consumeQueueMMapFileModel = new ConsumeQueueMMapFileModel();
             consumeQueueMMapFileModel.loadFileInMMap(topic,
                     queueModel.getId(),
-                    queueModel.getFileName(),
                     queueModel.getLastOffset(),
                     queueModel.getOffsetLimit()
             );

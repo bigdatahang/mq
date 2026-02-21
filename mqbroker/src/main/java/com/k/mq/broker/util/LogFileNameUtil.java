@@ -2,16 +2,16 @@ package com.k.mq.broker.util;
 
 import com.k.mq.broker.cache.CommonCache;
 
-import static com.k.mq.broker.constants.BrokerConstants.BASE_STORE_PATH;
+import static com.k.mq.broker.constants.BrokerConstants.*;
 
 /**
- * CommitLog文件名工具类
- * 用于生成和管理CommitLog文件的命名规则
+ * Log文件名工具类
+ * 用于生成和管理Log文件的命名规则
  * 文件名格式：8位数字，如"00000000"、"00000001"等
  *
  * @author yihang07
  */
-public class CommitLogFileNameUtil {
+public class LogFileNameUtil {
     /**
      * 文件名长度固定为8位
      */
@@ -74,11 +74,25 @@ public class CommitLogFileNameUtil {
         return String.format("%08d", fileNumber);
     }
 
+    public static String incrConsumeQueueName(String oldFileName) {
+        return incrCommitLogName(oldFileName);
+    }
+
     public static String buildCommitLogFileName(String topic, String commitLogFileName) {
         return CommonCache.getGlobalProperties().getMqHome()
-                + BASE_STORE_PATH
+                + BASE_COMMIT_LOG_PATH
                 + topic
-                + "/"
+                + SPLIT
                 + commitLogFileName;
+    }
+
+    public static String buildConsumeQueueFileName(String topic, Integer queueId, String fileName) {
+        return CommonCache.getGlobalProperties().getMqHome()
+                + BASE_CONSUME_QUEUE_PATH
+                + topic
+                + SPLIT
+                + queueId
+                + SPLIT
+                + fileName;
     }
 }

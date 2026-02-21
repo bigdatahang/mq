@@ -5,7 +5,7 @@ import com.k.mq.broker.model.CommitLogMessageModel;
 import com.k.mq.broker.model.CommitLogModel;
 import com.k.mq.broker.model.ConsumeQueueDetailModel;
 import com.k.mq.broker.model.MQTopicModel;
-import com.k.mq.broker.util.CommitLogFileNameUtil;
+import com.k.mq.broker.util.LogFileNameUtil;
 import com.k.mq.broker.util.PutMessageLock;
 import com.k.mq.broker.util.UnfairReentrantLock;
 
@@ -119,7 +119,7 @@ public class MMapFileModel {
             filePath = createNewCommitLogFile(topic, commitLogModel).getFilePath();
         } else if (diff > 0) {
             // offset未达到上限，使用当前CommitLog文件
-            filePath = CommitLogFileNameUtil.buildCommitLogFileName(topic, commitLogModel.getFileName());
+            filePath = LogFileNameUtil.buildCommitLogFileName(topic, commitLogModel.getFileName());
         } else {
             // offset超过了offsetLimit，这是异常情况
             throw new IllegalStateException(
@@ -205,10 +205,10 @@ public class MMapFileModel {
      */
     private CommitLogFilePath createNewCommitLogFile(String topic, CommitLogModel commitLogModel) {
         // 生成新的文件名（在原文件名基础上递增）
-        String newFileName = CommitLogFileNameUtil.incrCommitLogName(commitLogModel.getFileName());
+        String newFileName = LogFileNameUtil.incrCommitLogName(commitLogModel.getFileName());
 
         // 构建完整的文件路径
-        String newFilePath = CommitLogFileNameUtil.buildCommitLogFileName(topic, newFileName);
+        String newFilePath = LogFileNameUtil.buildCommitLogFileName(topic, newFileName);
 
         // 创建物理文件
         try {

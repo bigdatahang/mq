@@ -53,6 +53,10 @@ public class QueueModel {
         this.lastOffset = lastOffset;
     }
 
+    public int diff() {
+        return offsetLimit - latestOffset;
+    }
+
     @Override
     public String toString() {
         return "QueueModel{" +
