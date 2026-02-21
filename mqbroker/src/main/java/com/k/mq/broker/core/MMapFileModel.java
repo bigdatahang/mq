@@ -1,10 +1,7 @@
 package com.k.mq.broker.core;
 
 import com.k.mq.broker.cache.CommonCache;
-import com.k.mq.broker.model.CommitLogMessageModel;
-import com.k.mq.broker.model.CommitLogModel;
-import com.k.mq.broker.model.ConsumeQueueDetailModel;
-import com.k.mq.broker.model.MQTopicModel;
+import com.k.mq.broker.model.*;
 import com.k.mq.broker.util.LogFileNameUtil;
 import com.k.mq.broker.util.PutMessageLock;
 import com.k.mq.broker.util.UnfairReentrantLock;
@@ -19,6 +16,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.k.mq.broker.constants.BrokerConstants.COMMIT_LOG_DEFAULT_MAPPED_SIZE;
@@ -269,8 +267,8 @@ public class MMapFileModel {
             throw new IllegalArgumentException("CommitLogModel is null");
         }
 
-        lock.lock();
         try {
+            lock.lock();
             // 【修复】先转换为字节数组，获取实际要写入的字节数
             byte[] writeContent = commitLogMessageModel.convertToBytes();
 
@@ -297,16 +295,25 @@ public class MMapFileModel {
         }
     }
 
-    private void dispatcher(byte[] writeContent, int msgIndex) {
+    private void dispatcher(byte[] writeContent, int msgIndex) throws IOException {
         MQTopicModel mqTopicModel = CommonCache.getMqTopicModelMap().get(topic);
         if (mqTopicModel == null) {
             throw new RuntimeException("MQTopicModel IS NULL");
         }
+        // TODO queueId的计算逻辑
+        int queueId = 0;
         ConsumeQueueDetailModel consumeQueueDetailModel = new ConsumeQueueDetailModel();
         consumeQueueDetailModel.setCommitLogFileName(Integer.parseInt(mqTopicModel.getCommitLogModel().getFileName()));
         consumeQueueDetailModel.setMsgIndex(msgIndex);
         consumeQueueDetailModel.setMsgLength(writeContent.length);
-
+        byte[] content = consumeQueueDetailModel.convertToBytes();
+        List<ConsumeQueueMMapFileModel> consumeQueueMMapFileModels = CommonCache.getConsumeQueueMMapFileModelManager().get(topic);
+        ConsumeQueueMMapFileModel consumeQueueMMapFileModel = consumeQueueMMapFileModels.stream().filter(queueModel -> queueModel.getQueueId().equals(queueId)).findFirst().orElse(null);
+        if (consumeQueueMMapFileModel != null) {
+            consumeQueueMMapFileModel.writeContent(content);
+        }
+        QueueModel queueModel = mqTopicModel.getQueueList().get(queueId);
+        queueModel.getLatestOffset().addAndGet(content.length);
     }
 
     /**
@@ -323,8 +330,8 @@ public class MMapFileModel {
 
         // 【修复】检查MappedByteBuffer的实际剩余空间
         // 当前offset位置之后的实际可用空间
-        long currentOffset = commitLogModel.getOffset().get();
-        int bufferRemaining = mappedByteBuffer.capacity() - (int) currentOffset;
+        int currentOffset = commitLogModel.getOffset().get();
+        int bufferRemaining = mappedByteBuffer.capacity() - currentOffset;
 
         // 使用实际剩余空间和业务剩余空间中的较小值
         long actualSpace = Math.min(space, bufferRemaining);

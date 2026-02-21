@@ -1,5 +1,7 @@
 package com.k.mq.broker.model;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * 队列模型
  * 表示一个消息队列的配置和状态信息
@@ -10,7 +12,7 @@ public class QueueModel {
     private Integer id;
     private String fileName;
     private Integer offsetLimit;
-    private Integer latestOffset;
+    private AtomicInteger latestOffset;
     private Integer lastOffset;
 
     public Integer getId() {
@@ -37,11 +39,11 @@ public class QueueModel {
         this.offsetLimit = offsetLimit;
     }
 
-    public Integer getLatestOffset() {
+    public AtomicInteger getLatestOffset() {
         return latestOffset;
     }
 
-    public void setLatestOffset(Integer latestOffset) {
+    public void setLatestOffset(AtomicInteger latestOffset) {
         this.latestOffset = latestOffset;
     }
 
@@ -54,7 +56,7 @@ public class QueueModel {
     }
 
     public int diff() {
-        return offsetLimit - latestOffset;
+        return offsetLimit - latestOffset.get();
     }
 
     @Override

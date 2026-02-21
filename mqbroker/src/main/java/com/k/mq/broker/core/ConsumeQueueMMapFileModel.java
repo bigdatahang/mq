@@ -14,6 +14,8 @@ import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConsumeQueueMMapFileModel {
     /**
@@ -39,7 +41,7 @@ public class ConsumeQueueMMapFileModel {
      * 写入消息时使用的锁
      * 保证并发写入的线程安全性
      */
-    private PutMessageLock lock = new UnfairReentrantLock();
+    private PutMessageLock putMessageLock;
 
     /**
      * 队列Id
@@ -51,6 +53,7 @@ public class ConsumeQueueMMapFileModel {
         this.queueId = queueId;
         String filePath = getLatestConsumeQueueFile();
         this.doMMap(filePath, startOffset, mappedSize);
+        putMessageLock = new UnfairReentrantLock();
     }
 
     private void doMMap(String filePath, int startOffset, int mappedSize) throws IOException {
@@ -60,6 +63,55 @@ public class ConsumeQueueMMapFileModel {
         }
         fileChannel = new RandomAccessFile(file, "rw").getChannel();
         mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, startOffset, mappedSize);
+    }
+
+    public void writeContent(byte[] content) throws IOException {
+        this.writeContent(content, false);
+    }
+
+    public void writeContent(byte[] content, boolean force) throws IOException {
+        Map<String, MQTopicModel> mqTopicModelMap = CommonCache.getMqTopicModelMap();
+        MQTopicModel mqTopicModel = mqTopicModelMap.get(topic);
+        if (mqTopicModel == null) {
+            throw new IllegalArgumentException("topic does not exist, topic is: " + topic);
+        }
+        QueueModel queueModel = mqTopicModel.getQueueList().get(queueId);
+        try {
+            putMessageLock.lock();
+            this.checkConsumeQueueHasEnableSpace(content.length, queueModel);
+            mappedByteBuffer.position(queueModel.getLatestOffset().get());
+            mappedByteBuffer.put(content);
+            // 强制刷盘
+            if (force) {
+                mappedByteBuffer.force();
+            }
+        } finally {
+            putMessageLock.unlock();
+        }
+    }
+
+    private void checkConsumeQueueHasEnableSpace(int messageSize, QueueModel queueModel) throws IOException {
+        // 获取业务层面的剩余空间
+        long space = queueModel.diff();
+
+        // 【修复】检查MappedByteBuffer的实际剩余空间
+        // 当前offset位置之后的实际可用空间
+        int currentOffset = queueModel.getLatestOffset().get();
+        int bufferRemaining = mappedByteBuffer.capacity() - currentOffset;
+
+        // 使用实际剩余空间和业务剩余空间中的较小值
+        long actualSpace = Math.min(space, bufferRemaining);
+
+        // 如果消息大小超过实际可用空间，需要创建新文件
+        if (messageSize > actualSpace) {
+            String newFilePath = createNewConsumeQueueFile(queueModel.getFileName());
+            queueModel.setId(queueId);
+            queueModel.setFileName(newFilePath);
+            queueModel.setLatestOffset(new AtomicInteger(0));
+            queueModel.setLastOffset(0);
+            queueModel.setOffsetLimit(queueModel.getOffsetLimit());
+            doMMap(newFilePath, 0, queueModel.getOffsetLimit());
+        }
     }
 
     private String getLatestConsumeQueueFile() {
@@ -78,7 +130,7 @@ public class ConsumeQueueMMapFileModel {
         String filePath;
         if (diff == 0) {
             // offset已达到上限，需要创建新的CommitLog文件
-            filePath = this.createNewCommitLogFile(queueModel.getFileName());
+            filePath = this.createNewConsumeQueueFile(queueModel.getFileName());
         } else if (diff > 0) {
             // offset未达到上限，使用当前CommitLog文件
             filePath = LogFileNameUtil.buildConsumeQueueFileName(topic, queueId, queueModel.getFileName());
@@ -92,7 +144,7 @@ public class ConsumeQueueMMapFileModel {
         return filePath;
     }
 
-    private String createNewCommitLogFile(String fileName) {
+    private String createNewConsumeQueueFile(String fileName) {
         String newFileName = LogFileNameUtil.incrConsumeQueueName(fileName);
         String newFilePath = LogFileNameUtil.buildConsumeQueueFileName(topic, queueId, newFileName);
         // 创建物理文件
@@ -110,5 +162,13 @@ public class ConsumeQueueMMapFileModel {
             throw new RuntimeException("Failed to create consumeQueue file: " + newFilePath, e);
         }
         return newFilePath;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public Integer getQueueId() {
+        return queueId;
     }
 }

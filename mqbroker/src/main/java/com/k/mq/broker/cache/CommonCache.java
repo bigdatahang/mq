@@ -1,6 +1,7 @@
 package com.k.mq.broker.cache;
 
 import com.k.mq.broker.config.GlobalProperties;
+import com.k.mq.broker.core.ConsumeQueueMMapFileModelManager;
 import com.k.mq.broker.model.ConsumeQueueOffsetModel;
 import com.k.mq.broker.model.MQTopicModel;
 
@@ -24,6 +25,8 @@ public class CommonCache {
     public static List<MQTopicModel> mqTopicModelList = new ArrayList<>();
 
     public static ConsumeQueueOffsetModel consumeQueueOffsetModel = new ConsumeQueueOffsetModel();
+
+    public static ConsumeQueueMMapFileModelManager consumeQueueMMapFileModelManager = new ConsumeQueueMMapFileModelManager();
 
     /**
      * 获取全局配置
@@ -61,5 +64,13 @@ public class CommonCache {
 
     public static void setConsumeQueueOffsetModel(ConsumeQueueOffsetModel consumeQueueOffsetModel) {
         CommonCache.consumeQueueOffsetModel = consumeQueueOffsetModel;
+    }
+
+    public static ConsumeQueueMMapFileModelManager getConsumeQueueMMapFileModelManager() {
+        return consumeQueueMMapFileModelManager;
+    }
+
+    public static void setConsumeQueueMMapFileModelManager(ConsumeQueueMMapFileModelManager consumeQueueMMapFileModelManager) {
+        CommonCache.consumeQueueMMapFileModelManager = consumeQueueMMapFileModelManager;
     }
 }
