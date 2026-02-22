@@ -29,13 +29,13 @@ public class ConsumeQueueConsumeHandler {
      * @throws IllegalArgumentException 当topic或参数不存在时抛出
      * @throws IllegalStateException    当消费偏移量数据格式错误时抛出
      */
-    public byte[] consume(String topic, String queueId, String consumeGroup) {
+    public byte[] consume(String topic, Integer queueId, String consumeGroup) {
         // 1. 参数校验
         if (topic == null || topic.isEmpty()) {
             throw new IllegalArgumentException("topic cannot be null or empty");
         }
-        if (queueId == null || queueId.isEmpty()) {
-            throw new IllegalArgumentException("queueId cannot be null or empty");
+        if (queueId == null) {
+            throw new IllegalArgumentException("queueId cannot be null ");
         }
         if (consumeGroup == null || consumeGroup.isEmpty()) {
             throw new IllegalArgumentException("consumeGroup cannot be null or empty");
@@ -80,7 +80,6 @@ public class ConsumeQueueConsumeHandler {
         // 5. 获取或初始化队列偏移量映射
         Map<String, Map<String, String>> consumeGroupOffsetMap = consumeGroupDetail.getConsumeGroupDetail();
         Map<String, String> queueOffsetDetailMap = consumeGroupOffsetMap.get(consumeGroup);
-
         if (queueOffsetDetailMap == null) {
             // 首次消费该消费组，初始化所有队列的偏移量为0
             queueOffsetDetailMap = new HashMap<>();
@@ -98,7 +97,7 @@ public class ConsumeQueueConsumeHandler {
         }
 
         // 6. 获取指定队列的消费偏移量
-        String consumeStr = queueOffsetDetailMap.get(queueId);
+        String consumeStr = queueOffsetDetailMap.get(String.valueOf(queueId));
         if (consumeStr == null) {
             throw new IllegalArgumentException(
                     String.format("queueId does not exist in consumeGroup: queueId=%s, consumeGroup=%s",
@@ -127,16 +126,22 @@ public class ConsumeQueueConsumeHandler {
                     String.format("Invalid consume offset value: %s", consumeQueueOffsetStr), e
             );
         }
+        List<QueueModel> queueList = mqTopicModel.getQueueList();
+        if (queueList != null) {
+            QueueModel queueModel = queueList.get(queueId);
+            if (queueModel.getLatestOffset().get() <= consumeQueueOffset) {
+                return null;
+            }
+        }
 
         //8. 从ConsumeQueue中读取消息索引
         // 根据 consumeQueueFileName 和 consumeQueueOffset 定位到ConsumeQueue中的位置
         // 读取12字节的索引数据：commitLogFileName(4) + msgIndex(4) + msgLength(4)
         ConsumeQueueMMapFileModelManager consumeQueueMMapFileModelManager = CommonCache.getConsumeQueueMMapFileModelManager();
-        ConsumeQueueMMapFileModel consumeQueueMMapFileModel = consumeQueueMMapFileModelManager.get(topic, Integer.parseInt(queueId));
+        ConsumeQueueMMapFileModel consumeQueueMMapFileModel = consumeQueueMMapFileModelManager.get(topic, queueId);
         byte[] content = consumeQueueMMapFileModel.readContent(consumeQueueOffset);
         ConsumeQueueDetailModel consumeQueueDetailModel = new ConsumeQueueDetailModel();
         consumeQueueDetailModel.readFromBytes(content);
-        System.out.println("消费到ConsumeQueueDetailModel内容：" + consumeQueueDetailModel);
         //9. 从CommitLog中读取实际消息
         // 根据索引信息，从对应的CommitLog文件中读取消息内容
         CommitLogMMapFileModel commitLogMMapFileModel = CommonCache.getCommitLogMMapFileModelManager().get(topic);
@@ -153,18 +158,18 @@ public class ConsumeQueueConsumeHandler {
      * @param queueId      队列ID
      * @param consumeGroup 消费组名称
      */
-    public boolean ack(String topic, String queueId, String consumeGroup) {
+    public boolean ack(String topic, Integer queueId, String consumeGroup) {
         // 更新内存中的消费偏移量
         ConsumeQueueOffsetModel.OffsetTable offsetTable = CommonCache.getConsumeQueueOffsetModel().getOffsetTable();
         Map<String, ConsumeQueueOffsetModel.ConsumeGroupDetail> topicConsumeGroupDetail = offsetTable.getTopicConsumeGroupDetail();
         ConsumeQueueOffsetModel.ConsumeGroupDetail consumeGroupDetail = topicConsumeGroupDetail.get(topic);
         Map<String, Map<String, String>> consumeOffsetDetailMap = consumeGroupDetail.getConsumeGroupDetail();
         Map<String, String> queueOffsetDetailMap = consumeOffsetDetailMap.get(consumeGroup);
-        String offsetStr = queueOffsetDetailMap.get(queueId);
+        String offsetStr = queueOffsetDetailMap.get(String.valueOf(queueId));
         String fileName = offsetStr.split("#")[0];
         Integer offset = Integer.parseInt(offsetStr.split("#")[1]);
-        int currentOffset = offset + 12;
-        queueOffsetDetailMap.put(queueId, fileName + "#" + currentOffset);
+        offset += 12;
+        queueOffsetDetailMap.put(String.valueOf(queueId), fileName + "#" + offset);
         return true;
     }
 }

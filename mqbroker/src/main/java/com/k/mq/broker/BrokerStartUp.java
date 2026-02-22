@@ -10,7 +10,7 @@ import com.k.mq.broker.core.ConsumeQueueConsumeHandler;
 import com.k.mq.broker.model.MQTopicModel;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Broker启动类
@@ -83,13 +83,64 @@ public class BrokerStartUp {
     public static void main(String[] args) throws IOException, InterruptedException {
         initProperties();
         String topic = "order_cancel_topic";
-        String consumeGroup = "user_service_group";
-        for (int i = 0; i < 200; i++) {
-//            commitLogAppenderHandler.appendMessage(topic, ("this is content " + i).getBytes());
-            byte[] content = consumeQueueConsumeHandler.consume(topic, "0", consumeGroup);
-            System.out.println("消费到的结果:" + new String(content));
-            consumeQueueConsumeHandler.ack(topic, "0", consumeGroup);
-            TimeUnit.MICROSECONDS.sleep(1);
-        }
+        String userConsumeGroup = "user_service_group";
+        String orderConsumeGroup = "order_service_group";
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    byte[] content = consumeQueueConsumeHandler.consume(topic, 0, userConsumeGroup);
+                    if (content != null) {
+                        System.out.println(userConsumeGroup + ",消费内容:" + new String(content));
+                        consumeQueueConsumeHandler.ack(topic, 0, userConsumeGroup);
+                    } else {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    byte[] content = consumeQueueConsumeHandler.consume(topic, 0, orderConsumeGroup);
+                    if (content != null) {
+                        System.out.println(orderConsumeGroup + ",消费内容:" + new String(content));
+                        consumeQueueConsumeHandler.ack(topic, 0, orderConsumeGroup);
+                    } else {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            }
+        }).start();
+        AtomicInteger i = new AtomicInteger(0);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                while (true) {
+                    try {
+                        commitLogAppenderHandler.appendMessage(topic, ("message_" + (i.getAndIncrement())).getBytes());
+                        Thread.sleep(100);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }).start();
     }
 }

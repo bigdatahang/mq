@@ -2,7 +2,7 @@
 	{
 		"latestCommitLog":{
 			"fileName":"00000000",
-			"offset":3690,
+			"offset":4503,
 			"offsetLimit":1048576
 		},
 		"queueList":[
@@ -10,7 +10,7 @@
 				"fileName":"00000000",
 				"id":0,
 				"lastOffset":0,
-				"latestOffset":2400,
+				"latestOffset":5196,
 				"offsetLimit":6291456
 			},
 			{

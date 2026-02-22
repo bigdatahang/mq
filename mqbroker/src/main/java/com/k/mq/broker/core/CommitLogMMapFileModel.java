@@ -1,6 +1,5 @@
 package com.k.mq.broker.core;
 
-import com.alibaba.fastjson2.JSON;
 import com.k.mq.broker.cache.CommonCache;
 import com.k.mq.broker.model.CommitLogMessageModel;
 import com.k.mq.broker.model.CommitLogModel;
@@ -281,7 +280,7 @@ public class CommitLogMMapFileModel {
 
             // 设置position到当前offset
             int currentOffset = commitLogModel.getOffset().get();
-            mappedByteBuffer.position((int) currentOffset);
+            mappedByteBuffer.position(currentOffset);
 
             // 写入数据
             mappedByteBuffer.put(writeContent);
@@ -329,10 +328,10 @@ public class CommitLogMMapFileModel {
         );
         consumeQueueDetailModel.setMsgIndex(msgIndex);
         consumeQueueDetailModel.setMsgLength(writeContent.length);
-        System.out.println("写入consumeQueue内容: " + JSON.toJSONString(consumeQueueDetailModel));
+        // System.out.println("写入consumeQueue内容: " + JSON.toJSONString(consumeQueueDetailModel));
         byte[] content = consumeQueueDetailModel.convertToBytes();
         consumeQueueDetailModel.readFromBytes(content);
-        System.out.println("byte convert is: " + consumeQueueDetailModel);
+//         System.out.println("byte convert is: " + consumeQueueDetailModel);
         // 获取ConsumeQueue映射管理器
         ConsumeQueueMMapFileModelManager manager = CommonCache.getConsumeQueueMMapFileModelManager();
         if (manager == null) {
