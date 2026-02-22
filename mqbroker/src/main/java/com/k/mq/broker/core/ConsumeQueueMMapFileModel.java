@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.List;
@@ -20,26 +21,44 @@ import java.util.concurrent.atomic.AtomicInteger;
  * ConsumeQueue内存映射文件模型
  * 负责ConsumeQueue文件的内存映射和消息索引的读写操作
  * ConsumeQueue存储消息在CommitLog中的位置信息，每条记录固定12字节
- * 
+ *
  * @author yihang07
  */
 public class ConsumeQueueMMapFileModel {
-    /** 文件对象 */
+    public static final int CONSUME_QUEUE_MESSAGE_SIZE = 12;
+    /**
+     * 文件对象
+     */
     private File file;
-    
-    /** 内存映射缓冲区 */
+
+    /**
+     * 内存映射缓冲区
+     */
     private MappedByteBuffer mappedByteBuffer;
-    
-    /** 文件通道 */
+
+    /**
+     * 文件内容读取映射缓冲区
+     */
+    private ByteBuffer readBuffer;
+
+    /**
+     * 文件通道
+     */
     private FileChannel fileChannel;
 
-    /** 主题名称 */
+    /**
+     * 主题名称
+     */
     private String topic;
 
-    /** 写入消息时使用的锁，保证并发写入的线程安全性 */
+    /**
+     * 写入消息时使用的锁，保证并发写入的线程安全性
+     */
     private PutMessageLock putMessageLock;
 
-    /** 队列ID */
+    /**
+     * 队列ID
+     */
     private Integer queueId;
 
     /**
@@ -75,6 +94,7 @@ public class ConsumeQueueMMapFileModel {
         }
         fileChannel = new RandomAccessFile(file, "rw").getChannel();
         mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, startOffset, mappedSize);
+        readBuffer = mappedByteBuffer.slice();
     }
 
     /**
@@ -103,20 +123,20 @@ public class ConsumeQueueMMapFileModel {
         if (queueModel == null) {
             throw new IllegalArgumentException("queueModel does not exist, queueId is: " + queueId);
         }
-        
+
         try {
             putMessageLock.lock();
             // 检查空间是否足够，不足则创建新文件
             this.checkConsumeQueueHasEnableSpace(content.length, queueModel);
-            
+
             // 设置写入位置并写入内容
             int currentOffset = queueModel.getLatestOffset().get();
             mappedByteBuffer.position(currentOffset);
             mappedByteBuffer.put(content);
-            
+
             // 更新偏移量
             queueModel.getLatestOffset().addAndGet(content.length);
-            
+
             // 强制刷盘
             if (force) {
                 mappedByteBuffer.force();
@@ -124,6 +144,14 @@ public class ConsumeQueueMMapFileModel {
         } finally {
             putMessageLock.unlock();
         }
+    }
+
+    public byte[] readContent(int pos) {
+        ByteBuffer byteBuffer = readBuffer.slice();
+        byteBuffer.position(pos);
+        byte[] content = new byte[CONSUME_QUEUE_MESSAGE_SIZE];
+        byteBuffer.get(content);
+        return content;
     }
 
     /**
@@ -149,12 +177,12 @@ public class ConsumeQueueMMapFileModel {
         if (messageSize > actualSpace) {
             ConsumeQueueFilePath newConsumeQueueFile = createNewConsumeQueueFile(queueModel.getFileName());
             String newFilePath = newConsumeQueueFile.getFilePath();
-            
+
             // 更新queueModel的状态
             queueModel.setFileName(newConsumeQueueFile.getFileName());
             queueModel.setLatestOffset(new AtomicInteger(0));
             queueModel.setLastOffset(0);
-            
+
             // 重新映射新文件
             doMMap(newFilePath, 0, queueModel.getOffsetLimit());
         }
@@ -174,12 +202,12 @@ public class ConsumeQueueMMapFileModel {
         if (mqTopicModel == null) {
             throw new IllegalArgumentException("topic does not exist, topic is: " + topic);
         }
-        
+
         List<QueueModel> queueList = mqTopicModel.getQueueList();
         if (queueList == null || queueId >= queueList.size()) {
             throw new IllegalArgumentException("queueId does not exist, queueId is: " + queueId);
         }
-        
+
         QueueModel queueModel = queueList.get(queueId);
         int diff = queueModel.diff();
 

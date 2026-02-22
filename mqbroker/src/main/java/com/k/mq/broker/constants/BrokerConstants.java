@@ -15,7 +15,7 @@ public class BrokerConstants {
      * 基础存储路径
      */
     public static final String BASE_COMMIT_LOG_PATH = "/broker/commitlog/";
-    public static final String BASE_CONSUME_QUEUE_PATH = "/broker/commitlog/";
+    public static final String BASE_CONSUME_QUEUE_PATH = "/broker/consumequeue/";
     public static final String SPLIT = "/";
     public static final Integer COMMIT_LOG_DEFAULT_MAPPED_SIZE = 1 * 1024 * 1024;
     public static final Long DEFAULT_REFRESH_MQ_TOPIC_SECOND = 3L;

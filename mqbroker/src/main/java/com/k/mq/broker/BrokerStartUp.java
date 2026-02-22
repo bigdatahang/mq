@@ -6,6 +6,7 @@ import com.k.mq.broker.config.GlobalPropertiesLoader;
 import com.k.mq.broker.config.MQTopicLoader;
 import com.k.mq.broker.core.CommitLogAppenderHandler;
 import com.k.mq.broker.core.ConsumeQueueAppenderHandler;
+import com.k.mq.broker.core.ConsumeQueueConsumeHandler;
 import com.k.mq.broker.model.MQTopicModel;
 
 import java.io.IOException;
@@ -35,6 +36,8 @@ public class BrokerStartUp {
 
     public static ConsumeQueueAppenderHandler consumeQueueAppenderHandler;
 
+    public static ConsumeQueueConsumeHandler consumeQueueConsumeHandler;
+
     /**
      * 初始化Broker的各项配置和资源
      * 包括全局配置、Topic配置、以及CommitLog文件的内存映射加载
@@ -61,6 +64,8 @@ public class BrokerStartUp {
         commitLogAppenderHandler = new CommitLogAppenderHandler();
         consumeQueueAppenderHandler = new ConsumeQueueAppenderHandler();
 
+        consumeQueueConsumeHandler = new ConsumeQueueConsumeHandler();
+
         // 为每个Topic准备CommitLog文件的内存映射
         for (MQTopicModel mqTopicModel : CommonCache.getMqTopicModelMap().values()) {
             String topic = mqTopicModel.getTopic();
@@ -78,9 +83,12 @@ public class BrokerStartUp {
     public static void main(String[] args) throws IOException, InterruptedException {
         initProperties();
         String topic = "order_cancel_topic";
-        for (int i = 10; i < 50000; i++) {
-            String content = "this is content " + i;
-            commitLogAppenderHandler.appendMessage(topic, content.getBytes());
+        String consumeGroup = "user_service_group";
+        for (int i = 0; i < 200; i++) {
+//            commitLogAppenderHandler.appendMessage(topic, ("this is content " + i).getBytes());
+            byte[] content = consumeQueueConsumeHandler.consume(topic, "0", consumeGroup);
+            System.out.println("消费到的结果:" + new String(content));
+            consumeQueueConsumeHandler.ack(topic, "0", consumeGroup);
             TimeUnit.MICROSECONDS.sleep(1);
         }
     }

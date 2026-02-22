@@ -1,6 +1,7 @@
 package com.k.mq.broker.cache;
 
 import com.k.mq.broker.config.GlobalProperties;
+import com.k.mq.broker.core.CommitLogMMapFileModelManager;
 import com.k.mq.broker.core.ConsumeQueueMMapFileModelManager;
 import com.k.mq.broker.model.ConsumeQueueOffsetModel;
 import com.k.mq.broker.model.MQTopicModel;
@@ -27,6 +28,8 @@ public class CommonCache {
     public static ConsumeQueueOffsetModel consumeQueueOffsetModel = new ConsumeQueueOffsetModel();
 
     public static ConsumeQueueMMapFileModelManager consumeQueueMMapFileModelManager = new ConsumeQueueMMapFileModelManager();
+
+    public static CommitLogMMapFileModelManager commitLogMMapFileModelManager = new CommitLogMMapFileModelManager();
 
     /**
      * 获取全局配置
@@ -72,5 +75,13 @@ public class CommonCache {
 
     public static void setConsumeQueueMMapFileModelManager(ConsumeQueueMMapFileModelManager consumeQueueMMapFileModelManager) {
         CommonCache.consumeQueueMMapFileModelManager = consumeQueueMMapFileModelManager;
+    }
+
+    public static CommitLogMMapFileModelManager getCommitLogMMapFileModelManager() {
+        return commitLogMMapFileModelManager;
+    }
+
+    public static void setCommitLogMMapFileModelManager(CommitLogMMapFileModelManager commitLogMMapFileModelManager) {
+        CommonCache.commitLogMMapFileModelManager = commitLogMMapFileModelManager;
     }
 }

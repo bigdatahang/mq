@@ -1,6 +1,7 @@
 package com.k.mq.broker.config;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.k.mq.broker.cache.CommonCache;
 import com.k.mq.broker.model.MQTopicModel;
 import com.k.mq.broker.util.FileContentUtil;
@@ -47,7 +48,7 @@ public class MQTopicLoader {
                     public void run() {
                         Map<String, MQTopicModel> mqTopicModelMap = CommonCache.getMqTopicModelMap();
                         List<MQTopicModel> mqTopicModelList = new ArrayList<>(mqTopicModelMap.values());
-                        FileContentUtil.overwriteToFile(filePath, JSON.toJSONString(mqTopicModelList));
+                        FileContentUtil.overwriteToFile(filePath, JSON.toJSONString(mqTopicModelList, SerializerFeature.PrettyFormat ));
                         System.out.println("定时线程 开始刷写mq-topic文件");
                     }
                 }, 0, DEFAULT_REFRESH_MQ_TOPIC_SECOND, TimeUnit.SECONDS

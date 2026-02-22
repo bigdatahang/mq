@@ -1,6 +1,7 @@
 package com.k.mq.broker.config;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.k.mq.broker.cache.CommonCache;
 import com.k.mq.broker.model.ConsumeQueueOffsetModel;
 import com.k.mq.broker.util.FileContentUtil;
@@ -38,7 +39,7 @@ public class ConsumeQueueOffsetLoader {
                     @Override
                     public void run() {
                         ConsumeQueueOffsetModel consumeQueueOffsetModel = CommonCache.getConsumeQueueOffsetModel();
-                        FileContentUtil.overwriteToFile(filePath, JSON.toJSONString(consumeQueueOffsetModel));
+                        FileContentUtil.overwriteToFile(filePath, JSON.toJSONString(consumeQueueOffsetModel, SerializerFeature.PrettyFormat));
                         System.out.println("定时线程 开始刷写consumequeue-offset文件");
                     }
                 }, 0, DEFAULT_REFRESH_CONSUME_QUEUE_OFFSET_SECOND, TimeUnit.SECONDS

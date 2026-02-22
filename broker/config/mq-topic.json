@@ -1,34 +1,33 @@
 [
-  {
-    "latestCommitLog": {
-      "fileName": "00000000",
-      "offset": 0,
-      "offsetLimit": 1048576
-    },
-    "queueSize": 3,
-    "queueList": [
-      {
-        "id": 1,
-        "fileName": "00000000",
-        "offsetLimit": 6291456,
-        "latestOffset": 0,
-        "lastOffset": 0
-      },
-      {
-        "id": 2,
-        "fileName": "00000000",
-        "offsetLimit": 6291456,
-        "latestOffset": 0,
-        "lastOffset": 0
-      },
-      {
-        "id": 3,
-        "fileName": "00000000",
-        "offsetLimit": 6291456,
-        "latestOffset": 0,
-        "lastOffset": 0
-      }
-    ],
-    "topic": "order_cancel_topic"
-  }
+	{
+		"latestCommitLog":{
+			"fileName":"00000000",
+			"offset":3690,
+			"offsetLimit":1048576
+		},
+		"queueList":[
+			{
+				"fileName":"00000000",
+				"id":0,
+				"lastOffset":0,
+				"latestOffset":2400,
+				"offsetLimit":6291456
+			},
+			{
+				"fileName":"00000000",
+				"id":1,
+				"lastOffset":0,
+				"latestOffset":0,
+				"offsetLimit":6291456
+			},
+			{
+				"fileName":"00000000",
+				"id":2,
+				"lastOffset":0,
+				"latestOffset":0,
+				"offsetLimit":6291456
+			}
+		],
+		"topic":"order_cancel_topic"
+	}
 ]

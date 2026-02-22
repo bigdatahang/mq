@@ -16,11 +16,6 @@ import java.util.List;
  */
 public class ConsumeQueueAppenderHandler {
     /**
-     * ConsumeQueue内存映射文件模型管理器
-     */
-    private ConsumeQueueMMapFileModelManager consumeQueueMMapFileModelManager = new ConsumeQueueMMapFileModelManager();
-
-    /**
      * 准备ConsumeQueue文件的内存映射加载
      * 为指定Topic的所有队列创建内存映射
      *
@@ -32,14 +27,14 @@ public class ConsumeQueueAppenderHandler {
         if (mqTopicModel == null) {
             throw new IllegalArgumentException("topic does not exist, topic is: " + topic);
         }
-        
+
         List<QueueModel> queueList = mqTopicModel.getQueueList();
         if (queueList == null || queueList.isEmpty()) {
             throw new IllegalStateException("queueList is empty for topic: " + topic);
         }
-        
+
         List<ConsumeQueueMMapFileModel> consumeQueueMMapFileModelList = new ArrayList<>();
-        
+
         // 为每个队列创建内存映射
         for (QueueModel queueModel : queueList) {
             ConsumeQueueMMapFileModel consumeQueueMMapFileModel = new ConsumeQueueMMapFileModel();
@@ -51,17 +46,6 @@ public class ConsumeQueueAppenderHandler {
             );
             consumeQueueMMapFileModelList.add(consumeQueueMMapFileModel);
         }
-        
-        consumeQueueMMapFileModelManager.put(topic, consumeQueueMMapFileModelList);
-        CommonCache.setConsumeQueueMMapFileModelManager(consumeQueueMMapFileModelManager);
-    }
-
-    /**
-     * 获取ConsumeQueue管理器
-     *
-     * @return ConsumeQueue内存映射文件模型管理器
-     */
-    public ConsumeQueueMMapFileModelManager getConsumeQueueMMapFileModelManager() {
-        return consumeQueueMMapFileModelManager;
+        CommonCache.getConsumeQueueMMapFileModelManager().put(topic, consumeQueueMMapFileModelList);
     }
 }

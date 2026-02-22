@@ -1,5 +1,6 @@
 package com.k.mq.broker.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ConsumeQueueOffsetModel {
@@ -13,8 +14,8 @@ public class ConsumeQueueOffsetModel {
         this.offsetTable = offsetTable;
     }
 
-    private static class OffsetTable {
-        private Map<String, ConsumeGroupDetail> topicConsumeGroupDetail;
+    public static class OffsetTable {
+        private Map<String, ConsumeGroupDetail> topicConsumeGroupDetail = new HashMap<>();
 
         public Map<String, ConsumeGroupDetail> getTopicConsumeGroupDetail() {
             return topicConsumeGroupDetail;
@@ -25,8 +26,8 @@ public class ConsumeQueueOffsetModel {
         }
     }
 
-    private static class ConsumeGroupDetail {
-        private Map<String, Map<String, String>> consumeGroupDetail;
+    public static class ConsumeGroupDetail {
+        private Map<String, Map<String, String>> consumeGroupDetail = new HashMap<>();
 
         public Map<String, Map<String, String>> getConsumeGroupDetail() {
             return consumeGroupDetail;

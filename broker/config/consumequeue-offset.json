@@ -1,11 +1,15 @@
 {
-  "offsetTable": {
-    "order_cancel_topic": {
-      "order_service_group": {
-        "0": "00000000#102",
-        "1": "00000000#102",
-        "2": "00000000#102"
-      }
-    }
-  }
+	"offsetTable":{
+		"topicConsumeGroupDetail":{
+			"order_cancel_topic":{
+				"consumeGroupDetail":{
+					"user_service_group":{
+						"0":"00000000#2460",
+						"1":"00000000#0",
+						"2":"00000000#0"
+					}
+				}
+			}
+		}
+	}
 }
