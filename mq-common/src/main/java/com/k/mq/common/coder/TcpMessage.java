@@ -1,5 +1,9 @@
 package com.k.mq.common.coder;
 
+import java.util.Arrays;
+
+import static com.k.mq.common.constants.BrokerConstants.DEFAULT_MAGIC_NUM;
+
 public class TcpMessage {
     private short magic;
     private int code;
@@ -9,11 +13,11 @@ public class TcpMessage {
     public TcpMessage() {
     }
 
-    public TcpMessage(short magic, int code, int len, byte[] body) {
-        this.magic = magic;
+    public TcpMessage(int code, byte[] body) {
         this.code = code;
-        this.len = len;
         this.body = body;
+        this.magic = DEFAULT_MAGIC_NUM;
+        this.len = body.length;
     }
 
     public short getMagic() {
@@ -46,5 +50,15 @@ public class TcpMessage {
 
     public void setBody(byte[] body) {
         this.body = body;
+    }
+
+    @Override
+    public String toString() {
+        return "TcpMessage{" +
+                "magic=" + magic +
+                ", code=" + code +
+                ", len=" + len +
+                ", body=" + Arrays.toString(body) +
+                '}';
     }
 }

@@ -6,7 +6,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 
 public class TcpMessageEncoder extends MessageToByteEncoder {
     @Override
-    protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) {
         TcpMessage message = (TcpMessage) msg;
         out.writeShort(message.getMagic());
         out.writeInt(message.getCode());

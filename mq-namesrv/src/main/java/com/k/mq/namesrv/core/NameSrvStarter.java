@@ -36,6 +36,7 @@ public class NameSrvStarter {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 bossGroup.shutdownGracefully();
                 workGroup.shutdownGracefully();
+                System.out.println("NameServer closed");
             }));
 
             ChannelFuture channelFuture = bootstrap.bind(port).sync();
@@ -47,6 +48,7 @@ public class NameSrvStarter {
         } finally {
             bossGroup.shutdownGracefully();
             workGroup.shutdownGracefully();
+            System.out.println("NameServer closed");
         }
     }
 }

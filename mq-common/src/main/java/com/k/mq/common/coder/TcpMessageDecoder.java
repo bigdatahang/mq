@@ -27,7 +27,7 @@ public class TcpMessageDecoder extends ByteToMessageDecoder {
             }
             byte[] body = new byte[len];
             in.readBytes(body);
-            TcpMessage message = new TcpMessage(DEFAULT_MAGIC_NUM, code, len, body);
+            TcpMessage message = new TcpMessage(code, body);
             out.add(message);
         }
     }
