@@ -5,7 +5,7 @@ import com.k.mq.broker.model.CommitLogMessageModel;
 
 import java.io.IOException;
 
-import static com.k.mq.broker.constants.BrokerConstants.COMMIT_LOG_DEFAULT_MAPPED_SIZE;
+import static com.k.mq.common.constants.BrokerConstants.COMMIT_LOG_DEFAULT_MAPPED_SIZE;
 
 /**
  * CommitLog消息追加处理器

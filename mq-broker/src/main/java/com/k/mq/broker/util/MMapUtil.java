@@ -12,7 +12,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.concurrent.CountDownLatch;
 
-import static com.k.mq.broker.constants.BrokerConstants.COMMIT_LOG_DEFAULT_MAPPED_SIZE;
+import static com.k.mq.common.constants.BrokerConstants.COMMIT_LOG_DEFAULT_MAPPED_SIZE;
 
 /**
  * 内存映射文件工具类

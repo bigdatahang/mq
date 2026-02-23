@@ -9,7 +9,7 @@ import io.netty.util.internal.StringUtil;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.k.mq.broker.constants.BrokerConstants.DEFAULT_REFRESH_CONSUME_QUEUE_OFFSET_SECOND;
+import static com.k.mq.common.constants.BrokerConstants.DEFAULT_REFRESH_CONSUME_QUEUE_OFFSET_SECOND;
 
 
 public class ConsumeQueueOffsetLoader {

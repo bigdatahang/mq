@@ -2,7 +2,7 @@ package com.k.mq.broker.util;
 
 import com.k.mq.broker.cache.CommonCache;
 
-import static com.k.mq.broker.constants.BrokerConstants.*;
+import static com.k.mq.common.constants.BrokerConstants.*;
 
 /**
  * Log文件名工具类
