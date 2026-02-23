@@ -1,4 +1,4 @@
-package com.k.mq.namesrv.event.listener;
+package com.k.mq.namesrv.event.spi.listener;
 
 import com.k.mq.namesrv.event.model.Event;
 

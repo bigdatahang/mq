@@ -18,7 +18,11 @@ public class TcpNettyServerHandler extends SimpleChannelInboundHandler {
     // 2.事件发布器的实现 EventBus => event
     // 3.事件处理器的接收 Listener => 处理event
     // 4.数据存储（基于本地MAP）
-    private EventBus eventBus = new EventBus();
+    private EventBus eventBus;
+
+    public TcpNettyServerHandler(EventBus eventBus) {
+        this.eventBus = eventBus;
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) {

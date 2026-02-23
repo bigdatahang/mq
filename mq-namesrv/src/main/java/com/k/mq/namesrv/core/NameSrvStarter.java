@@ -2,6 +2,7 @@ package com.k.mq.namesrv.core;
 
 import com.k.mq.common.coder.TcpMessageDecoder;
 import com.k.mq.common.coder.TcpMessageEncoder;
+import com.k.mq.namesrv.event.EventBus;
 import com.k.mq.namesrv.handler.TcpNettyServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -29,7 +30,7 @@ public class NameSrvStarter {
                         protected void initChannel(Channel ch) throws Exception {
                             ch.pipeline().addLast(new TcpMessageDecoder());
                             ch.pipeline().addLast(new TcpMessageEncoder());
-                            ch.pipeline().addLast(new TcpNettyServerHandler());
+                            ch.pipeline().addLast(new TcpNettyServerHandler(new EventBus()));
                         }
                     });
 
