@@ -52,13 +52,12 @@ public class EventBus {
         List<Listener> listeners = eventListenerMap.get(event.getClass());
         threadPoolExecutor.execute(() -> {
             for (Listener listener : listeners) {
-                listener.onReceive(event);
+                try {
+                    listener.onReceive(event);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
-    }
-
-    public static void main(String[] args) {
-        EventBus eventBus = new EventBus();
-        eventBus.init();
     }
 }

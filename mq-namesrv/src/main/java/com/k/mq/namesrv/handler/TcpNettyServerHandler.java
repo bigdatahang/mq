@@ -2,7 +2,7 @@ package com.k.mq.namesrv.handler;
 
 import com.alibaba.fastjson2.JSON;
 import com.k.mq.common.coder.TcpMessage;
-import com.k.mq.common.enums.NameSrvEvent;
+import com.k.mq.common.enums.NameSrvEventCode;
 import com.k.mq.namesrv.event.EventBus;
 import com.k.mq.namesrv.event.model.Event;
 import com.k.mq.namesrv.event.model.HeartbeatEvent;
@@ -30,13 +30,13 @@ public class TcpNettyServerHandler extends SimpleChannelInboundHandler {
         int code = message.getCode();
         byte[] body = message.getBody();
         Event event = null;
-        if (code == NameSrvEvent.REGISTRY.getCode()) {
+        if (code == NameSrvEventCode.REGISTRY.getCode()) {
             // 注册事件
             event = JSON.parseObject(body, RegistryEvent.class);
-        } else if (code == NameSrvEvent.UN_REGISTRY.getCode()) {
+        } else if (code == NameSrvEventCode.UN_REGISTRY.getCode()) {
             // 下线事件
             event = JSON.parseObject(body, UnRegistryEvent.class);
-        } else if (code == NameSrvEvent.HEARTBEAT.getCode()) {
+        } else if (code == NameSrvEventCode.HEARTBEAT.getCode()) {
             // 心跳事件
             event = JSON.parseObject(body, HeartbeatEvent.class);
         }

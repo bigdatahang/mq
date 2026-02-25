@@ -1,6 +1,6 @@
 package com.k.mq.common.enums;
 
-public enum NameSrvEvent {
+public enum NameSrvEventCode {
     REGISTRY(1, "注册事件"),
     UN_REGISTRY(2, "下线事件"),
     HEARTBEAT(3, "心跳事件");
@@ -8,7 +8,7 @@ public enum NameSrvEvent {
     int code;
     String desc;
 
-    NameSrvEvent(int code, String desc) {
+    NameSrvEventCode(int code, String desc) {
         this.code = code;
         this.desc = desc;
     }
